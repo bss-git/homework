@@ -16,6 +16,8 @@ services:
       MYSQL_ROOT_PASSWORD: example
     volumes:
       - homework_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
         
 volumes:
   homework_data:

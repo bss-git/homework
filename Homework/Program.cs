@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Homework.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,8 @@ namespace Homework
     {
         public static void Main(string[] args)
         {
+            MySqlDb.SetConnectionParams("mysql", "soc", "root", "example");
+
             CreateHostBuilder(args).Build().Run();
         }
 
