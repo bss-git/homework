@@ -51,14 +51,13 @@ namespace Homework.Auth
                 
                 return View(loginDto);
             }
-            
 
             await Authenticate(user.Id, user.Login);
 
-            return RedirectToAction("GetUser", "Users", user.Login);
+            return Redirect($"~/users/{user.Login}");
         }
 
-        [Route("register")]
+        [HttpGet("register")]
         public async Task<IActionResult> Register(RegisterViewModel registerDto)
         {
             if (!ModelState.IsValid)
@@ -68,10 +67,10 @@ namespace Homework.Auth
             {
                 var user = await _userCreator.CreateAsync(registerDto.Login);
                 await _userRepository.SaveAsync(user);
-                await _passwordManager.SavePasswordAsync(user.Id, registerDto.Login);
+                await _passwordManager.SavePasswordAsync(user.Login, registerDto.Password);
                 await Authenticate(user.Id, user.Login);
 
-                return RedirectToAction("GetUser", "Users", user.Login);
+                return Redirect($"~/users/{user.Login}");
             }
             catch (ExistingLoginException)
             {
@@ -86,13 +85,14 @@ namespace Homework.Auth
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, login),
-                new Claim("id", userId.ToString())
+                new Claim("Id", userId.ToString())
             };
             var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

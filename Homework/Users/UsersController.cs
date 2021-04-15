@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Homework.Auth;
+using Homework.Users.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,11 +21,19 @@ namespace Homework.Users
         }
 
         [HttpGet("{login}")]
-        public async Task<IActionResult> GetUser(string login)
+        public async Task<IActionResult> UserPage(string login)
         {
             var user = await _userRepository.GetAsync(login);
+            if (user == null)
+                return NotFound("Пользователь не найден");
+            
+            var dto = new UserViewModel
+            {
+                User = user,
+                IsMe = User.Id() == user.Id
+            };
 
-            return View(user);
+            return View(dto);
         }
     }
 }

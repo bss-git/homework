@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace Homework.Users
 {
-    public enum Sex
+    public enum Gender : byte
     {
-        Male = 0,
+        Unset = 0,
 
-        Female = 1
+        Male = 1,
+
+        Female = 2
     }
 }

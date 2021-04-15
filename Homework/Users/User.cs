@@ -11,17 +11,17 @@ namespace Homework.Users
 
         public string Login { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; set; } = string.Empty;
 
-        public string Surname { get; private set; }
+        public string Surname { get; set; } = string.Empty;
 
-        public DateTime BirthDate { get; private set; }
+        public DateTime BirthDate { get; set; }
 
-        public Sex Sex { get; private set; }
+        public Gender Gender { get; set; }
 
-        public string Interest { get; private set; }
+        public string Interest { get; set; } = string.Empty;
 
-        public string City { get; private set; }
+        public string City { get; set; } = string.Empty;
 
         public User(Guid id, string login)
         {

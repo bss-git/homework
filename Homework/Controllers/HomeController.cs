@@ -8,16 +8,17 @@ using Microsoft.Extensions.Logging;
 using Homework.Models;
 using Homework.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Homework.Auth;
 
 namespace Homework.Controllers
 {   
     public class HomeController : Controller
     {
+        [Authorize]
+        [HttpGet("~/")]
         public IActionResult Index()
         {
-            //ViewData["test"] = MySqlDb.Test();
-
-            return View();
+            return Redirect($"~/users/{User.Login()}");
         }
 
         [Authorize]

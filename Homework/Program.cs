@@ -14,7 +14,7 @@ namespace Homework
     {
         public static void Main(string[] args)
         {
-            MySqlDb.SetConnectionParams("mysql", "soc", "root", "example");
+            MySqlDb.SetConnectionParams("localhost", "soc", "root", "example");
 
             CreateHostBuilder(args).Build().Run();
         }

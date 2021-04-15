@@ -10,6 +10,6 @@ namespace Homework.Auth
     {
         Task<bool> IsValidPasswordAsync(string login, string password);
 
-        Task SavePasswordAsync(Guid userId, string password);
+        Task SavePasswordAsync(string login, string password);
     }
 }
