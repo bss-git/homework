@@ -20,6 +20,16 @@ namespace Homework.Users
             _userRepository = userRepository;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UsersList(int offset, int limit)
+        {
+            var users = await _userRepository.GetListAsync(offset, Math.Max(Math.Min(limit, 50), 10));
+
+            var dto = users.Select(x => new UserListViewModel(x));
+
+            return View(dto);
+        }
+
         [HttpGet("{login}")]
         public async Task<IActionResult> UserPage(string login)
         {

@@ -19,7 +19,7 @@ namespace Homework.Persistence
 
         public Task<User> GetAsync(string login)
         {
-            return _mySql.GetItemAsync("GET_User", FromReader, new MySqlParameter("login", login));
+            return _mySql.GetItemAsync("GET_User", FromReader, new MySqlParameter("@login", login));
         }
 
         private static User FromReader(MySqlDataReader reader)
@@ -47,6 +47,13 @@ namespace Homework.Persistence
                 new MySqlParameter("@name", user.Name),
                 new MySqlParameter("@surname", user.Surname)
             });
+        }
+
+        public async Task<IEnumerable<User>> GetListAsync(int offset, int limit)
+        {
+            return await _mySql.GetListAsync("GET_UserList", FromReader,
+                new MySqlParameter("@offset", offset),
+                new MySqlParameter("@limit", limit));
         }
     }
 }

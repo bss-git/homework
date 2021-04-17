@@ -58,6 +58,12 @@ namespace Homework.Auth
         }
 
         [HttpGet("register")]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel registerDto)
         {
             if (!ModelState.IsValid)

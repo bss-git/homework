@@ -10,6 +10,8 @@ namespace Homework.Users
     {
         Task<User> GetAsync(string login);
 
+        Task<IEnumerable<User>> GetListAsync(int offset, int limit);
+
         Task SaveAsync(User person);
     }
 }
