@@ -6,11 +6,15 @@ services:
       dockerfile: Homework/Dockerfile
       context: ..
     ports:
-      - "5000:80"
+      - "80:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
 
   mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example

@@ -26,14 +26,48 @@ namespace Homework.Users
             var user = await _userRepository.GetAsync(login);
             if (user == null)
                 return NotFound("Пользователь не найден");
-            
-            var dto = new UserViewModel
-            {
-                User = user,
-                IsMe = User.Id() == user.Id
-            };
+
+            var dto = new UserViewModel(user);
 
             return View(dto);
+        }
+
+        [HttpGet("edit")]
+        public async Task<IActionResult> EditUser()
+        {
+            var login = User.Login();
+
+            var user = await _userRepository.GetAsync(login);
+            if (user == null)
+                return NotFound("Пользователь не найден");
+
+            var dto = new UserViewModel(user);
+
+            return View(dto);
+        }
+
+        [HttpPost("edit")]
+        public async Task<IActionResult> EditUser(UserViewModel dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var login = User.Login();
+
+            var user = await _userRepository.GetAsync(login);
+            if (user == null)
+                return NotFound("Пользователь не найден");
+
+            user.Name = dto.Name ?? user.Name;
+            user.Surname = dto.Surname ?? user.Surname;
+            user.Gender = dto.Gender;
+            user.BirthDate = dto.BirthDate;
+            user.City = dto.City ?? user.City;
+            user.Interest = dto.Interest ?? user.Interest;
+
+            await _userRepository.SaveAsync(user);
+
+            return Redirect($"~/users/{user.Login}");
         }
     }
 }

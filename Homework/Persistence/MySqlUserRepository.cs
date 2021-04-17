@@ -10,9 +10,16 @@ namespace Homework.Persistence
 {
     public class MySqlUserRepository : IUserRepository
     {
+        private MySqlDb _mySql;
+
+        public MySqlUserRepository(MySqlDb mySqlDb)
+        {
+            _mySql = mySqlDb;
+        }
+
         public Task<User> GetAsync(string login)
         {
-            return MySqlDb.GetItemAsync("GET_User", FromReader, new MySqlParameter("login", login));
+            return _mySql.GetItemAsync("GET_User", FromReader, new MySqlParameter("login", login));
         }
 
         private static User FromReader(MySqlDataReader reader)
@@ -30,7 +37,7 @@ namespace Homework.Persistence
 
         public Task SaveAsync(User user)
         {
-            return MySqlDb.ExecuteNonQueryAsync("INUPD_User", new[] {
+            return _mySql.ExecuteNonQueryAsync("INUPD_User", new[] {
                 new MySqlParameter("@id", user.Id.ToByteArray()),
                 new MySqlParameter("@login", user.Login),
                 new MySqlParameter("@city", user.City),

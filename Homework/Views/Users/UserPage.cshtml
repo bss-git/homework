@@ -1,8 +1,63 @@
-﻿@model Homework.Users.Dto.UserViewModel
+﻿@inject Homework.Auth.UserManager _userManager
 
-<h2>Вход на сайт</h2>
+@model Homework.Users.Dto.UserViewModel
 
-<div>@Model.User.Login</div>
-<div>@Model.IsMe</div>
+@{ var isMyPage = _userManager.CurrentUserId == Model.Id; }
 
+<h2>@(isMyPage ? "Моя страница" : $"Страница пользователя {Model.Login}")</h2>
+@if(isMyPage)
+{
+    <a href="edit">Редактировать</a>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            Имя
+        </div>
+        <div class="col-sm">
+            @Model.Name
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Фамилия
+        </div>
+        <div class="col-sm">
+            @Model.Surname
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Пол
+        </div>
+        <div class="col-sm">
+            @Model.GenderString
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Дата рождения
+        </div>
+        <div class="col-sm">
+            @Model.BirthDateString
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Город
+        </div>
+        <div class="col-sm">
+            @Model.City
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Интересы
+        </div>
+        <div class="col-sm">
+            @Model.Interest
+        </div>
+    </div>
+</div>
 

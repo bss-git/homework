@@ -1,0 +1,94 @@
+﻿@model Homework.Users.Dto.UserViewModel
+
+<h2>Редактировать данные</h2>
+
+<form asp-action="edit" asp-controller="users">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    <div>
+        <div class="form-group">
+            <label asp-for="Name">Имя</label>
+            <input type="text" asp-for="Name" />
+            <span asp-validation-for="Name" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Surname">Фамилия</label>
+            <input asp-for="Surname" />
+            <span asp-validation-for="Surname" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Gender">Пол</label>
+            <input asp-for="Gender" />
+            <span asp-validation-for="Gender" />
+        </div>
+        <div class="form-group">
+            <label asp-for="BirthDate">Дата рождения</label>
+            <input asp-for="BirthDate" />
+            <span asp-validation-for="BirthDate" />
+        </div>
+        <div class="form-group">
+            <label asp-for="City">Город</label>
+            <input asp-for="City" />
+            <span asp-validation-for="City" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Interest">Интересы</label>
+            <input asp-for="Interest" />
+            <span asp-validation-for="Interest" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Сохранить" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            Имя
+        </div>
+        <div class="col-sm">
+            @Model.Name
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Фамилия
+        </div>
+        <div class="col-sm">
+            @Model.Surname
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Пол
+        </div>
+        <div class="col-sm">
+            @Model.GenderString
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Дата рождения
+        </div>
+        <div class="col-sm">
+            @Model.BirthDateString
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Город
+        </div>
+        <div class="col-sm">
+            @Model.City
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Интересы
+        </div>
+        <div class="col-sm">
+            @Model.Interest
+        </div>
+    </div>
+</div>
+

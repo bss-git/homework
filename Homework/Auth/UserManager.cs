@@ -15,19 +15,10 @@ namespace Homework.Auth
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public bool IsLoggedIn()
-        {
-            return _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
-        }
+        public bool IsLoggedIn => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 
-        public string CurrentUserLogin()
-        {
-            return _httpContextAccessor.HttpContext.User.Login();
-        }
+        public string CurrentUserLogin => _httpContextAccessor.HttpContext.User.Login();
 
-        public Guid CurrentUserId()
-        {
-            return _httpContextAccessor.HttpContext.User.Id();
-        }
+        public Guid CurrentUserId => _httpContextAccessor.HttpContext.User.Id();
     }
 }

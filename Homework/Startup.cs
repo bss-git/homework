@@ -36,7 +36,11 @@ namespace Homework
 
             services.AddControllersWithViews();
 
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddOptions<MySqlOptions>().Bind(Configuration.GetSection("MySql"));
+            services.AddSingleton<MySqlDb>();
+
             services.AddScoped<UserManager>();
             services.AddSingleton<IPasswordManager, HashingMySqlPasswordManager>();
             services.AddSingleton<IUserRepository, MySqlUserRepository>();

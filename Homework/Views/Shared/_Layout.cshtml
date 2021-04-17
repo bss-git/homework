@@ -29,12 +29,12 @@
                     </ul>
                 </div>
             </div>
-            @if (_userManager.IsLoggedIn())
+            @if (_userManager.IsLoggedIn)
             {
                 <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post" class="navbar-right">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="~/users/@_userManager.CurrentUserLogin()" class="btn btn-link navbar-btn navbar-link">@_userManager.CurrentUserLogin()</a>
+                            <a href="~/users/@_userManager.CurrentUserLogin" class="btn btn-link navbar-btn navbar-link">@_userManager.CurrentUserLogin</a>
                         </li>
                         <li>
                             <button type="submit" class="btn btn-link navbar-btn navbar-link">Выйти</button>

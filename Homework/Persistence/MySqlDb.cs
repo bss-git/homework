@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.Extensions.Options;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -7,16 +8,19 @@ using System.Threading.Tasks;
 
 namespace Homework.Persistence
 {
-    public static class MySqlDb
+    public class MySqlDb
     {
-        private static string _connectionString;
+        private string _connectionString;
 
-        public static void SetConnectionParams(string host, string database, string user, string password)
+        public MySqlDb(IOptions<MySqlOptions> options)
         {
-            _connectionString = "Database=" + database + ";Datasource=" + host + ";User=" + user + ";Password=" + password;
+            _connectionString = "Database=" + options.Value.Database
+                + ";Datasource=" + options.Value.Host
+                + ";User=" + options.Value.User
+                + ";Password=" + options.Value.Password;
         }
 
-        public static async Task ExecuteNonQueryAsync(string procedureName, params MySqlParameter[] parameters)
+        public async Task ExecuteNonQueryAsync(string procedureName, params MySqlParameter[] parameters)
         {
             using var conn = new MySqlConnection(_connectionString);
             var cmd = conn.CreateCommand();
@@ -33,7 +37,7 @@ namespace Homework.Persistence
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public static async Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
+        public async Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
         {
             await using var conn = new MySqlConnection(_connectionString);
             var cmd = conn.CreateCommand();
@@ -58,7 +62,7 @@ namespace Homework.Persistence
             return result;
         }
 
-        public static async Task<T> GetItemAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
+        public async Task<T> GetItemAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
         {
             await using var conn = new MySqlConnection(_connectionString);
             var cmd = conn.CreateCommand();
