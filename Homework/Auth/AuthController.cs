@@ -76,7 +76,7 @@ namespace Homework.Auth
                 await _passwordManager.SavePasswordAsync(user.Login, registerDto.Password);
                 await Authenticate(user.Id, user.Login);
 
-                return Redirect($"~/users/{user.Login}");
+                return RedirectToAction("EditUser", "Users");
             }
             catch (ExistingLoginException)
             {

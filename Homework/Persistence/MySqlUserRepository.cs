@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
+using Homework.Users.Dto;
 
 namespace Homework.Persistence
 {
@@ -19,7 +20,7 @@ namespace Homework.Persistence
 
         public Task<User> GetAsync(string login)
         {
-            return _mySql.GetItemAsync("GET_User", FromReader, new MySqlParameter("@login", login));
+            return _mySql.GetItemAsync("GET_UserByLogin", FromReader, new MySqlParameter("@login", login));
         }
 
         private static User FromReader(MySqlDataReader reader)
@@ -30,6 +31,18 @@ namespace Homework.Persistence
                 City = reader.GetString("City"),
                 Gender = (Gender) reader.GetByte("Gender"),
                 Interest = reader.GetString("Interest"),
+                Name = reader.GetString("Name"),
+                Surname = reader.GetString("Surname")
+            };
+        }
+
+        private static UserListViewModel FromReaderList(MySqlDataReader reader)
+        {
+            return new UserListViewModel
+            {
+                Id = reader.GetGuid("Id"),
+                Login = reader.GetString("Login"),
+                City = reader.GetString("City"),
                 Name = reader.GetString("Name"),
                 Surname = reader.GetString("Surname")
             };
@@ -49,11 +62,28 @@ namespace Homework.Persistence
             });
         }
 
-        public async Task<IEnumerable<User>> GetListAsync(int offset, int limit)
+        public async Task<IEnumerable<UserListViewModel>> GetListAsync(int offset, int limit)
         {
-            return await _mySql.GetListAsync("GET_UserList", FromReader,
+            return await _mySql.GetListAsync("GET_UserList", FromReaderList,
                 new MySqlParameter("@offset", offset),
                 new MySqlParameter("@limit", limit));
+        }
+
+        public Task<User> GetAsync(Guid id)
+        {
+            return _mySql.GetItemAsync("GET_UserById", FromReader, new MySqlParameter("@id", id.ToByteArray()));
+        }
+
+        public async Task<IEnumerable<UserListViewModel>> GetFriendsAsync(Guid userId)
+        {
+            return await _mySql.GetListAsync("GET_UserFriends", FromReaderList,
+                new MySqlParameter("@userId", userId.ToByteArray()));
+        }
+
+        public async Task<IEnumerable<UserListViewModel>> GetOfferedFriendsAsync(Guid userId)
+        {
+            return await _mySql.GetListAsync("GET_UserOfferedFriends", FromReaderList,
+                new MySqlParameter("@userId", userId.ToByteArray()));
         }
     }
 }

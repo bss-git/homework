@@ -1,6 +1,6 @@
-﻿DROP procedure IF EXISTS `GET_User`;
+﻿DROP procedure IF EXISTS `GET_UserByLogin`;
 
-CREATE PROCEDURE `GET_User`
+CREATE PROCEDURE `GET_UserByLogin`
 (
 	IN login VARCHAR(200)
 )

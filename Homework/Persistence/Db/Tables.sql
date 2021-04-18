@@ -2,8 +2,7 @@
   `Login` varchar(200) NOT NULL,
   `PasswordHash` binary(32) NOT NULL,
   `Salt` char(36) NOT NULL,
-  PRIMARY KEY (`Login`)
-);
+  PRIMARY KEY (`Login`));
 
 
 CREATE TABLE `User` (
@@ -15,5 +14,14 @@ CREATE TABLE `User` (
   `Gender` tinyint(1) NOT NULL,
   `BirthDate` date NOT NULL,
   `Interest` varchar(4000) NOT NULL,
-  PRIMARY KEY (`Id`)
-)
+  PRIMARY KEY (`Id`));
+
+CREATE TABLE `FriendOffer` (
+  `Id` BINARY(16) NOT NULL,
+  `From` BINARY(16) NULL,
+  `To` BINARY(16) NULL,
+  PRIMARY KEY (`Id`));
+
+CREATE TABLE `soc`.`FriendLink` (
+`UserId` BINARY(16) NOT NULL,
+`FriendId` BINARY(16) NOT NULL);

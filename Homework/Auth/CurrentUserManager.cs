@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Homework.Auth
 {
-    public class UserManager
+    public class CurrentUserManager
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserManager(IHttpContextAccessor httpContextAccessor)
+        public CurrentUserManager(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

@@ -1,4 +1,21 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿async function SendFriendOffer(to) {
+    let response = await fetch('/api/friends/sendOffer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(to)
+    });
 
-// Write your JavaScript code.
+    if (response.ok)
+        alert("Предложение отправлено")
+    else
+        alert(await response.text())
+}
+
+$(document).ready(function(e) {
+    $('#add-friend').click(e => {
+        let userId = $(e.target).data('userId')
+        SendFriendOffer(userId)
+    })
+})

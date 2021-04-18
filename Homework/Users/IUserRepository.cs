@@ -1,4 +1,5 @@
 ﻿using Homework.Models;
+using Homework.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,13 @@ namespace Homework.Users
     {
         Task<User> GetAsync(string login);
 
-        Task<IEnumerable<User>> GetListAsync(int offset, int limit);
+        Task<User> GetAsync(Guid id);
+
+        Task<IEnumerable<UserListViewModel>> GetListAsync(int offset, int limit);
+
+        Task<IEnumerable<UserListViewModel>> GetFriendsAsync(Guid userId);
+
+        Task<IEnumerable<UserListViewModel>> GetOfferedFriendsAsync(Guid userId);
 
         Task SaveAsync(User person);
     }

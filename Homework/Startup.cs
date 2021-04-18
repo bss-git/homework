@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Homework.Auth;
+using Homework.Friends;
 using Homework.Persistence;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -41,10 +42,15 @@ namespace Homework
             services.AddOptions<MySqlOptions>().Bind(Configuration.GetSection("MySql"));
             services.AddSingleton<MySqlDb>();
 
-            services.AddScoped<UserManager>();
+            services.AddScoped<CurrentUserManager>();
             services.AddSingleton<IPasswordManager, HashingMySqlPasswordManager>();
+
             services.AddSingleton<IUserRepository, MySqlUserRepository>();
             services.AddSingleton<UserCreator>();
+
+            services.AddSingleton<IFriendOfferRepository, MySqlFriendOfferRepository>();
+            services.AddSingleton<IFriendLinkRepository, MySqlFriendLinkRepository>();
+            services.AddSingleton<FriendManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

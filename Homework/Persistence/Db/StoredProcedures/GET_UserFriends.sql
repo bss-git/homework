@@ -1,6 +1,6 @@
-﻿DROP procedure IF EXISTS `GET_UserList`;
+﻿DROP procedure IF EXISTS `GET_UserFriends`;
 
-CREATE PROCEDURE `GET_UserList`
+CREATE PROCEDURE `GET_UserFriends`
 (
 	IN `offset` INT,
     IN `limit` TINYINT

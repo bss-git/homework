@@ -7,25 +7,14 @@ namespace Homework.Users.Dto
 {
     public class UserListViewModel
     {
-        public Guid Id { get; }
+        public Guid Id { get; set;  }
 
-        public string Login { get; }
+        public string Login { get; set; }
 
         public string Name { get; set; }
 
         public string Surname { get; set; }
 
         public string City { get; set; }
-
-        public UserListViewModel() { }
-
-        public UserListViewModel(User user)
-        {
-            Id = user.Id;
-            Login = user.Login;
-            Name = user.Name;
-            Surname = user.Surname;
-            City = user.City;
-        }
     }
 }
