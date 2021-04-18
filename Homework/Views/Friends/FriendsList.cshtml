@@ -1,15 +1,32 @@
-﻿@model Homework.Users.Dto.UserListViewModel
+﻿@model Homework.Friends.Dto.FriendsListViewModel
 
-<h2>Друзья</h2>
+<h3>Друзья: @Model.Friends.Count()</h3>
 <div class="list-group">
-    @*@foreach (var user in Model)
+    @foreach (var friend in Model.Friends)
     {
-        <a href="~/users/@user.Login" class="list-group-item list-group-item-action flex-column align-items-start">
+        <a href="~/users/@friend.Login" class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@user.Login</h5>
+                <h5 class="mb-1">@friend.Login</h5>
             </div>
-            <p class="mb-1">@user.Name @user.Surname</p>
-            <small>@user.City</small>
+            <p class="mb-1">@friend.Name @friend.Surname</p>
+            <small>@friend.City</small>
         </a>
-    }*@
+    }
+</div>
+
+<h3>Предлагают дружбу: @Model.Offers.Count()</h3>
+<div class="list-group">
+    @foreach (var offer in Model.Offers)
+    {
+        <div class="list-group-item flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><a href="~/users/@offer.Login">@offer.Login</a></h5>
+            </div>
+            <p class="mb-1">@offer.Name @offer.Surname</p>
+            <small>@offer.City</small>
+            <div>
+                <button class="accept-offer btn btn-outline-success" data-user-id="@offer.Id">Принять</button>
+            </div>
+        </div>
+    }
 </div>

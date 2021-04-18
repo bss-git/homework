@@ -1,4 +1,6 @@
-﻿using Homework.Users;
+﻿using Homework.Auth;
+using Homework.Friends.Dto;
+using Homework.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +25,10 @@ namespace Homework.Friends
         [HttpGet]
         public async Task<IActionResult> FriendsList()
         {
-            return View();
+            var friends = await _userRepository.GetFriendsAsync(User.Id());
+            var offers = await _userRepository.GetOfferedFriendsAsync(User.Id());
+
+            return View(new FriendsListViewModel { Friends = friends, Offers = offers });
         }
     }
 }

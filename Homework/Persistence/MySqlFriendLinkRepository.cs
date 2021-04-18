@@ -22,7 +22,7 @@ namespace Homework.Persistence
         {
             return _mySql.ExecuteNonQueryAsync("INSERT_FriendLink", new[] {
                 new MySqlParameter("@friend1", friend1.ToByteArray()),
-                new MySqlParameter("@friend2", friend1.ToByteArray())
+                new MySqlParameter("@friend2", friend2.ToByteArray())
             });
         }
     }

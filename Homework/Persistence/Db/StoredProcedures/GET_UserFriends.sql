@@ -2,8 +2,7 @@
 
 CREATE PROCEDURE `GET_UserFriends`
 (
-	IN `offset` INT,
-    IN `limit` TINYINT
+	IN userId BINARY(16)
 )
 BEGIN
 	SELECT
@@ -13,6 +12,6 @@ BEGIN
         u.Surname Surname,
         u.City City
 	FROM User u
-    LIMIT `limit`
-    OFFSET `offset`;
+    INNER JOIN FriendLink fl ON fl.FriendId = u.Id
+    WHERE fl.UserId = userId;;
 END
