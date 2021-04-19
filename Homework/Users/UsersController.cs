@@ -23,8 +23,11 @@ namespace Homework.Users
         [HttpGet]
         public async Task<IActionResult> UsersList(int offset, int limit)
         {
-            var users = await _userRepository.GetListAsync(offset, Math.Max(Math.Min(limit, 50), 10));
-            return View(users);
+            var adjustedOffset = Math.Max(0, offset);
+            var adjustedLimit = Math.Max(Math.Min(limit, 50), 10);
+            var users = await _userRepository.GetListAsync(adjustedOffset, adjustedLimit);
+
+            return View(new UserListViewModel { Users = users, CurrentOffset = adjustedOffset, PageSize = adjustedLimit });
         }
 
         [HttpGet("{login}")]

@@ -36,9 +36,9 @@ namespace Homework.Persistence
             };
         }
 
-        private static UserListViewModel FromReaderList(MySqlDataReader reader)
+        private static UserShortDto FromReaderList(MySqlDataReader reader)
         {
-            return new UserListViewModel
+            return new UserShortDto
             {
                 Id = reader.GetGuid("Id"),
                 Login = reader.GetString("Login"),
@@ -62,7 +62,7 @@ namespace Homework.Persistence
             });
         }
 
-        public async Task<IEnumerable<UserListViewModel>> GetListAsync(int offset, int limit)
+        public async Task<IEnumerable<UserShortDto>> GetListAsync(int offset, int limit)
         {
             return await _mySql.GetListAsync("GET_UserList", FromReaderList,
                 new MySqlParameter("@offset", offset),
@@ -74,13 +74,13 @@ namespace Homework.Persistence
             return _mySql.GetItemAsync("GET_UserById", FromReader, new MySqlParameter("@id", id.ToByteArray()));
         }
 
-        public async Task<IEnumerable<UserListViewModel>> GetFriendsAsync(Guid userId)
+        public async Task<IEnumerable<UserShortDto>> GetFriendsAsync(Guid userId)
         {
             return await _mySql.GetListAsync("GET_UserFriends", FromReaderList,
                 new MySqlParameter("@userId", userId.ToByteArray()));
         }
 
-        public async Task<IEnumerable<UserListViewModel>> GetOfferedFriendsAsync(Guid userId)
+        public async Task<IEnumerable<UserShortDto>> GetOfferedFriendsAsync(Guid userId)
         {
             return await _mySql.GetListAsync("GET_UserOfferedFriends", FromReaderList,
                 new MySqlParameter("@userId", userId.ToByteArray()));

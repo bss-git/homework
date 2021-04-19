@@ -26,10 +26,10 @@
                                 <a class="nav-link text-dark" href="~/users/@_userManager.CurrentUserLogin">Моя страница</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Friends" asp-action="FriendsList">Друзя</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Friends" asp-action="FriendsList">Друзья</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersList">Люди</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersList" asp-route-offset="0" asp-route-limit="10">Люди</a>
                             </li>
                         </ul>
                     </div>

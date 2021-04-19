@@ -13,11 +13,11 @@ namespace Homework.Users
 
         Task<User> GetAsync(Guid id);
 
-        Task<IEnumerable<UserListViewModel>> GetListAsync(int offset, int limit);
+        Task<IEnumerable<UserShortDto>> GetListAsync(int offset, int limit);
 
-        Task<IEnumerable<UserListViewModel>> GetFriendsAsync(Guid userId);
+        Task<IEnumerable<UserShortDto>> GetFriendsAsync(Guid userId);
 
-        Task<IEnumerable<UserListViewModel>> GetOfferedFriendsAsync(Guid userId);
+        Task<IEnumerable<UserShortDto>> GetOfferedFriendsAsync(Guid userId);
 
         Task SaveAsync(User person);
     }

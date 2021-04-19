@@ -1,8 +1,8 @@
-﻿@model IEnumerable<Homework.Users.Dto.UserListViewModel>
+﻿@model Homework.Users.Dto.UserListViewModel
 
 <h2>Люди</h2>
 <div class="list-group">
-    @foreach (var user in Model)
+    @foreach (var user in Model.Users)
     {
         <div class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
@@ -12,4 +12,24 @@
             <small>@user.City</small>
         </div>
     }
+</div>
+
+<div>
+    <ul class="pagination justify-content-center">
+        @if (Model.CurrentOffset > 0)
+        {
+            <li class="page-item">
+                <a asp-controller="Users" asp-action="UsersList" asp-route-offset="@(Math.Max(0, Model.CurrentOffset - Model.PageSize))" asp-route-limit="@Model.PageSize" class="page-link">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Предыдущая страница</span>
+                </a>
+            </li>
+        }
+        <li class="page-item">
+            <a asp-controller="Users" asp-action="UsersList" asp-route-offset="@(Model.CurrentOffset + Model.PageSize)" asp-route-limit="@Model.PageSize" class="page-link">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Следующая страница</span>
+            </a>
+        </li>
+    </ul>
 </div>

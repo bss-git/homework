@@ -8,8 +8,8 @@ namespace Homework.Friends.Dto
 {
     public class FriendsListViewModel
     {
-        public IEnumerable<UserListViewModel> Offers { get; set; }
+        public IEnumerable<UserShortDto> Offers { get; set; }
 
-        public IEnumerable<UserListViewModel> Friends { get; set; }
+        public IEnumerable<UserShortDto> Friends { get; set; }
     }
 }
