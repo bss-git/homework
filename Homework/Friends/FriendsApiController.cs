@@ -26,7 +26,7 @@ namespace Homework.Friends
 
         }
 
-        [HttpPost("sendOffer")]
+        [HttpPost("offer")]
         public async Task<IActionResult> SendOffer([FromBody] Guid to)
         {
             if (to == Guid.Empty)
@@ -41,7 +41,7 @@ namespace Homework.Friends
             return Ok();
         }
 
-        [HttpPost("acceptOffer")]
+        [HttpPost("accept")]
         public async Task<IActionResult> AcceptOffer([FromBody] Guid from)
         {
             if (from == Guid.Empty)
@@ -54,6 +54,17 @@ namespace Homework.Friends
             await _friendManager.AcceptOfferAsync(from, User.Id());
 
             return Ok();
+        }
+
+        [HttpGet("{friendId}/status")]
+        public async Task<IActionResult> GetFriendStatus([FromRoute] Guid friendId)
+        {
+            if (friendId == Guid.Empty)
+                return BadRequest("Некорректный идентификатор пользователя");
+
+            var status = await _friendManager.GetFriendStatusAsync(User.Id(), friendId);
+
+            return new JsonResult(new { status });
         }
     }
 }

@@ -32,7 +32,7 @@
             Пол
         </div>
         <div class="col-sm">
-            @Model.GenderString
+            @Html.DisplayFor(x => x.Gender)
         </div>
     </div>
     <div class="row">
@@ -40,7 +40,7 @@
             Дата рождения
         </div>
         <div class="col-sm">
-            @Model.BirthDateString
+            @Html.DisplayFor(x => x.BirthDate)
         </div>
     </div>
     <div class="row">
@@ -63,12 +63,13 @@
     {
         <div class="row">
             <div class="col-sm">
-                <button id="send-offer" class="btn btn-outline-success" data-user-id="@Model.Id">Предложить дружбу</button>
+                <div id="friend-status" data-user-id="@Model.Id">
+                </div>
             </div>
-        </div>
-
-        <div class="toast" role="alert" aria-live="polite" aria-atomic="true" data-delay="3000">
-            <div role="alert" aria-live="assertive" aria-atomic="true">...</div>
         </div>
     }
 </div>
+
+@section Scripts {
+    <script src="~/js/friendStatusComponent.js" type="module"></script>
+}

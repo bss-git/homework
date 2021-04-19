@@ -18,6 +18,17 @@ namespace Homework.Persistence
             _mySql = mySqlDb;
         }
 
+        public async Task<IEnumerable<Guid>> GetFriendIdsAsync(Guid userId)
+        {
+            return await _mySql.GetListAsync("GET_FriendLinkFriendIdList", FromReaderList,
+                new MySqlParameter("@userId", userId.ToByteArray()));
+        }
+
+        private static Guid FromReaderList(MySqlDataReader reader)
+        {
+            return reader.GetGuid("friendId");
+        }
+
         public Task SaveAsync(Guid friend1, Guid friend2)
         {
             return _mySql.ExecuteNonQueryAsync("INSERT_FriendLink", new[] {

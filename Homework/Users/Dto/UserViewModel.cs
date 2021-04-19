@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace Homework.Users.Dto
 
         public string Surname { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
 
         public Gender Gender { get; set; }
@@ -36,24 +38,5 @@ namespace Homework.Users.Dto
             City = user.City;
             BirthDate = user.BirthDate;
         }
-
-        public string GenderString
-        {
-            get
-            {
-                switch (Gender)
-                {
-                    case Gender.Male:
-                        return "Мужской";
-                    case Gender.Female:
-                        return "Женский";
-
-                    default:
-                        return string.Empty;
-                }
-            }
-        }
-
-        public string BirthDateString => BirthDate == default ? string.Empty : BirthDate.ToShortDateString();
     }
 }
