@@ -33,43 +33,30 @@ namespace Homework.Users
             return View(new UserListViewModel { Users = users, CurrentOffset = adjustedOffset, PageSize = adjustedLimit });
         }
 
-        private class NameJson
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUser([FromQuery] string input)
         {
-            public string text { get; set; }
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                ViewData["hasInput"] = false;
+                return View(Enumerable.Empty<UserShortDto>());
+            }
+            else
+            {
+                ViewData["hasInput"] = true;
+            }
 
-            public string gender { get; set; }
+            var args = input.Split(" ");
+            if (args.Length != 2)
+            {
+                ModelState.AddModelError("", "Введите часть имени и фамилии через пробел");
 
-            public int num { get; set; }
-        }
+                return View(Enumerable.Empty<UserShortDto>());
+            }
 
+            var users = await _userRepository.SearchAsync(args[0], args[1]);
 
-        private class SurnameJson
-        {
-            public string text { get; set; }
-
-            public string gender  { get; set; }
-
-            public string m_form { get; set; }
-
-            public string f_form { get; set; }
-        }
-
-        private static string Tr2(string s)
-        {
-            var ret = new StringBuilder();
-            string[] rus = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й",
-          "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц",
-          "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
-            string[] eng = { "A", "B", "V", "G", "D", "E", "E", "ZH", "Z", "I", "Y",
-          "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "KH", "TS",
-          "CH", "SH", "SHCH", null, "Y", null, "E", "YU", "YA" };
-
-            for (int j = 0; j < s.Length; j++)
-                for (int i = 0; i < rus.Length; i++)
-                    if (string.Equals(s.Substring(j, 1), rus[i], StringComparison.InvariantCultureIgnoreCase))
-                        ret.Append(eng[i]?.ToLower());
-
-            return ret.ToString();
+            return View(users);
         }
 
         [HttpGet("{login}")]

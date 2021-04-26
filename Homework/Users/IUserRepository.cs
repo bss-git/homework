@@ -11,6 +11,8 @@ namespace Homework.Users
     {
         Task<User> GetAsync(string login);
 
+        Task<IEnumerable<UserShortDto>> SearchAsync(string name, string surname);
+
         Task<User> GetAsync(Guid id);
 
         Task<IEnumerable<UserShortDto>> GetListAsync(int offset, int limit);

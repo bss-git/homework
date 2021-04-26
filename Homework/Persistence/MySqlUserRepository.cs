@@ -85,5 +85,12 @@ namespace Homework.Persistence
             return await _mySql.GetListAsync("GET_UserOfferedFriends", FromReaderList,
                 new MySqlParameter("@userId", userId.ToByteArray()));
         }
+
+        public async Task<IEnumerable<UserShortDto>> SearchAsync(string name, string surname)
+        {
+            return await _mySql.GetListAsync("GET_UserSearch", FromReaderList,
+                new MySqlParameter("@name", name),
+                new MySqlParameter("@surname", surname));
+        }
     }
 }

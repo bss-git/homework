@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Homework.Users.Dto.UserShortDto>
+
+<h2>Поиск</h2>
+
+<form asp-action="search" asp-controller="users" method="get">
+    <div>
+        <input type="text" name="input" />
+        <input type="submit" value="Искать" class="btn btn-outline-primary" />
+    </div>
+</form>
+
+@if (!(bool)ViewData["hasInput"])
+{
+    <div>Введите часть имени и фамилии через пробел</div>
+}
+
+<div class="validation" asp-validation-summary="ModelOnly"></div>
+
+@if (!Model.Any() && (bool)ViewData["hasInput"])
+{
+    <div>Поиск не дал результатов</div>
+}
+
+<div class="list-group">
+    @foreach (var user in Model)
+    {
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><a href="~/users/@user.Login">@user.Login</a></h5>
+            </div>
+            <p class="mb-1">@user.Name @user.Surname</p>
+            <small>@user.City</small>
+        </div>
+    }
+</div>
