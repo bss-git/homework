@@ -14,5 +14,6 @@ BEGIN
         u.City City
 	FROM User u
     WHERE u.Name LIKE concat(`name`, '%')
-        AND u.Surname LIKE concat(`surname`, '%');
+        AND u.Surname LIKE concat(`surname`, '%')
+    ORDER BY u.Id;
 END
