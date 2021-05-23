@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -10,78 +11,151 @@ namespace Homework.Persistence
 {
     public class MySqlDb
     {
-        private string _connectionString;
+        private string _masterConnectionString;
+        private string _replicasConnectionString;
+        private ILogger<MySqlDb> _logger;
 
-        public MySqlDb(IOptions<MySqlOptions> options)
+        public MySqlDb(IOptions<MySqlOptions> options, ILogger<MySqlDb> logger)
         {
-            _connectionString = "Database=" + options.Value.Database
-                + ";Datasource=" + options.Value.Host
-                + ";User=" + options.Value.User
-                + ";Password=" + options.Value.Password;
+            _logger = logger;
+
+            var sb = new MySqlConnectionStringBuilder();
+            sb.Server = options.Value.MasterHost;
+            sb.Pooling = true;
+            sb.UserID = options.Value.User;
+            sb.Password = options.Value.Password;
+            sb.Database = options.Value.Database;
+
+            _masterConnectionString = sb.ConnectionString;
+
+            sb = new MySqlConnectionStringBuilder();
+            sb.Server = options.Value.ReadReplicas;
+            sb.Pooling = true;
+            sb.UserID = options.Value.User;
+            sb.Password = options.Value.Password;
+            sb.Database = options.Value.Database;
+
+            _replicasConnectionString = sb.ConnectionString;
         }
 
         public async Task ExecuteNonQueryAsync(string procedureName, params MySqlParameter[] parameters)
         {
-            using var conn = new MySqlConnection(_connectionString);
-            var cmd = conn.CreateCommand();
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.CommandText = procedureName;
-
-            await conn.OpenAsync();
-
-            foreach(var param in parameters)
+            try
             {
-                cmd.Parameters.Add(param);
-            }
+                using var conn = new MySqlConnection(_masterConnectionString);
+                var cmd = conn.CreateCommand();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = procedureName;
 
-            await cmd.ExecuteNonQueryAsync();
+                await conn.OpenAsync();
+
+                foreach (var param in parameters)
+                {
+                    cmd.Parameters.Add(param);
+                }
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
+
+        public async Task ExecuteText(string text)
+        {
+            try
+            {
+                using var conn = new MySqlConnection(_masterConnectionString);
+                var cmd = conn.CreateCommand();
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = text;
+
+                await conn.OpenAsync();
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        //public Task<List<T>> GetListFromReplicaAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
+        //{
+        //    return GetListAsync<T>(procedureName, fromReader, parameters, true);
+        //}
+
+        //public Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
+        //{
+        //    return GetListAsync<T>(procedureName, fromReader, parameters, false);
+        //}
 
         public async Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
         {
-            await using var conn = new MySqlConnection(_connectionString);
-            var cmd = conn.CreateCommand();
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.CommandText = procedureName;
-
-            foreach (var param in parameters)
+            try
             {
-                cmd.Parameters.Add(param);
+                //await using var conn = useReplicas ? new MySqlConnection(_replicasConnectionString) : new MySqlConnection(_clusterConnectionString);
+                await using var conn = new MySqlConnection(_replicasConnectionString);
+                var cmd = conn.CreateCommand();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = procedureName;
+
+                foreach (var param in parameters)
+                {
+                    cmd.Parameters.Add(param);
+                }
+
+                await conn.OpenAsync();
+
+                var reader = (MySqlDataReader)await cmd.ExecuteReaderAsync();
+                var result = new List<T>();
+
+                while (reader.Read())
+                {
+                    result.Add(fromReader(reader));
+                }
+
+                return result;
             }
 
-            await conn.OpenAsync();
-
-            var reader = (MySqlDataReader) await cmd.ExecuteReaderAsync();
-            var result = new List<T>();
-
-            while (reader.Read())
+            catch (Exception ex)
             {
-                result.Add(fromReader(reader));
+                _logger.LogError(ex.Message);
+                throw;
             }
-
-            return result;
         }
 
         public async Task<T> GetItemAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
         {
-            await using var conn = new MySqlConnection(_connectionString);
-            var cmd = conn.CreateCommand();
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.CommandText = procedureName;
-
-            foreach (var param in parameters)
+            try
             {
-                cmd.Parameters.Add(param);
+                await using var conn = new MySqlConnection(_replicasConnectionString);
+                var cmd = conn.CreateCommand();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = procedureName;
+
+                foreach (var param in parameters)
+                {
+                    cmd.Parameters.Add(param);
+                }
+
+                await conn.OpenAsync();
+
+                var reader = (MySqlDataReader)await cmd.ExecuteReaderAsync();
+
+                if (reader.Read())
+                    return fromReader(reader);
+
+                return default;
             }
-
-            await conn.OpenAsync();
-
-            var reader = (MySqlDataReader) await cmd.ExecuteReaderAsync();
-
-            if (reader.Read())
-                return fromReader(reader);
-
-            return default;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
     }
 }

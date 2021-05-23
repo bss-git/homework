@@ -1,0 +1,1 @@
+CHANGE MASTER TO MASTER_HOST='mysql', MASTER_USER='repl', MASTER_PASSWORD='slavepass';

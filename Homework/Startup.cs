@@ -51,19 +51,22 @@ namespace Homework
             services.AddSingleton<IFriendOfferRepository, MySqlFriendOfferRepository>();
             services.AddSingleton<IFriendLinkRepository, MySqlFriendLinkRepository>();
             services.AddSingleton<FriendManager>();
+
+            services.AddScoped<ExceptionHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler();
+            //}
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseStaticFiles();
 
             app.UseRouting();

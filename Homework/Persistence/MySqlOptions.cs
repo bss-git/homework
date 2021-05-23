@@ -7,8 +7,10 @@ namespace Homework.Persistence
 {
     public class MySqlOptions
     {
-        public string Host { get; set; }
-        
+        public string MasterHost { get; set; }
+
+        public string ReadReplicas{ get; set; }
+
         public string Database { get; set; }
 
         public string User { get; set; }

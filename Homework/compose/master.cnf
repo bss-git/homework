@@ -1,0 +1,9 @@
+[mysqld]
+server-id=1
+binlog_format=ROW
+log-bin=mysql-bin
+replicate-do-db=soc
+gtid_mode=ON
+log-slave-updates
+enforce-gtid-consistency
+rpl_semi_sync_master_enabled=1

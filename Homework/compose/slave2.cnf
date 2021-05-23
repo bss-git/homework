@@ -1,0 +1,7 @@
+[mysqld]
+server-id=3
+replicate-do-db=soc
+gtid_mode=ON
+enforce-gtid-consistency
+relay-log=mysql-slave2-relay-bin
+rpl_semi_sync_slave_enabled=1
