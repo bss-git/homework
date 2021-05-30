@@ -3,16 +3,13 @@
 <h2>Поиск</h2>
 
 <form asp-action="search" asp-controller="users" method="get">
-    <div>
-        <input type="text" name="input" />
-        <input type="submit" value="Искать" class="btn btn-outline-primary" />
+    <div class="input-group mb-3">
+        <input type="text" name="input" class="form-control" placeholder="Введите часть имени и фамилии через пробел" aria-label="Введите часть имени и фамилии через пробел" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <input type="submit" value="Искать" class="btn btn-outline-primary" />
+        </div>
     </div>
 </form>
-
-@if (!(bool)ViewData["hasInput"])
-{
-    <div>Введите часть имени и фамилии через пробел</div>
-}
 
 <div class="validation" asp-validation-summary="ModelOnly"></div>
 

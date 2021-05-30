@@ -26,6 +26,9 @@
                                 <a class="nav-link text-dark" href="~/users/@_userManager.CurrentUserLogin">Моя страница</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Updates" asp-action="UpdatesList">Обновления</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Friends" asp-action="FriendsList">Друзья</a>
                             </li>
                             <li class="nav-item">
@@ -56,7 +59,6 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2021 - kanyga

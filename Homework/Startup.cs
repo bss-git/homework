@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Homework.Auth;
 using Homework.Friends;
 using Homework.Persistence;
+using Homework.Updates;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -51,6 +52,8 @@ namespace Homework
             services.AddSingleton<IFriendOfferRepository, MySqlFriendOfferRepository>();
             services.AddSingleton<IFriendLinkRepository, MySqlFriendLinkRepository>();
             services.AddSingleton<FriendManager>();
+
+            services.AddSingleton<IUpdatesRepository, MySqlUpdatesRepository>();
 
             services.AddScoped<ExceptionHandlingMiddleware>();
         }

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Homework.Updates.Dto.UpdateViewModel>
+
+<form asp-action="postUpdate" asp-controller="updates">
+    <div class="input-group mb-3">
+        <input type="text" name="message" class="form-control" placeholder="Введите сообщение" aria-label="Введите сообщение" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <input type="submit" value="Отправить" class="btn btn-outline-primary" />
+        </div>
+    </div>
+</form>
+
+<div class="list-group">
+    @foreach (var message in Model)
+    {
+        <div class="list-group-item flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@message.UserName</h5>
+                <small>@message.Timestamp</small>
+            </div>
+            <p class="mb-1">@message.Message</p>
+        </div>
+    }
+</div>
