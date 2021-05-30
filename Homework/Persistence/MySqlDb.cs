@@ -98,7 +98,7 @@ namespace Homework.Persistence
             try
             {
                 //await using var conn = useReplicas ? new MySqlConnection(_replicasConnectionString) : new MySqlConnection(_clusterConnectionString);
-                await using var conn = new MySqlConnection(_replicasConnectionString);
+                await using var conn = new MySqlConnection(_masterConnectionString);
                 var cmd = conn.CreateCommand();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = procedureName;
@@ -132,7 +132,7 @@ namespace Homework.Persistence
         {
             try
             {
-                await using var conn = new MySqlConnection(_replicasConnectionString);
+                await using var conn = new MySqlConnection(_masterConnectionString);
                 var cmd = conn.CreateCommand();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = procedureName;

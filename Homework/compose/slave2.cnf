@@ -5,3 +5,4 @@ gtid_mode=ON
 enforce-gtid-consistency
 relay-log=mysql-slave2-relay-bin
 rpl_semi_sync_slave_enabled=1
+read_only=1
