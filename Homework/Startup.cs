@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -52,10 +53,16 @@ namespace Homework
             services.AddSingleton<IFriendOfferRepository, MySqlFriendOfferRepository>();
             services.AddSingleton<IFriendLinkRepository, MySqlFriendLinkRepository>();
             services.AddSingleton<FriendManager>();
+            
+            services.AddMemoryCache();
 
-            services.AddSingleton<IUpdatesRepository, MySqlUpdatesRepository>();
+            services.AddSingleton<MySqlUpdatesRepository>();
+            services.AddSingleton<IUpdatesRepository>(sp => new UpdatesRepositoryCachingProxy(
+                sp.GetRequiredService<MySqlUpdatesRepository>(), sp.GetRequiredService<IFriendLinkRepository>(),
+                sp.GetRequiredService<IMemoryCache>()));
 
             services.AddScoped<ExceptionHandlingMiddleware>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
