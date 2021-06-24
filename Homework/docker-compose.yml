@@ -87,9 +87,17 @@ services:
       - replicator_data:/home/replicator
       - ./compose/tarantool_replication:/home/replicator_share
 
+  kafka:
+    image: 'bitnami/kafka:latest'
+    volumes:
+    - kafka:/bitnami/kafka
+    ports:
+      - "9092:9092"
+
 volumes:
   homework_data:
   homework_data_slave1:
   homework_data_slave2:
   tarantool_data:
   replicator_data:
+  kafka:

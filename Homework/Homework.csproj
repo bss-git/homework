@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="compose\tarantool_replication\git\**" />
+    <Content Remove="compose\tarantool_replication\git\**" />
+    <EmbeddedResource Remove="compose\tarantool_replication\git\**" />
+    <None Remove="compose\tarantool_replication\git\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0-preview1.19506.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0-preview1.19506.2">
       <PrivateAssets>all</PrivateAssets>

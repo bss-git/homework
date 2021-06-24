@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Homework.Auth;
+using Homework.Events;
 using Homework.Friends;
 using Homework.Persistence;
 using Homework.Updates;
@@ -63,6 +64,8 @@ namespace Homework
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 
+            services.AddSingleton<KafkaProducer>();
+            services.AddSingleton<KafkaConsumer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
