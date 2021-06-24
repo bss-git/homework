@@ -1,6 +1,6 @@
 ﻿DROP procedure IF EXISTS `GET_UserById`;
 
-CREATE PROCEDURE `GET_UserFriends`
+CREATE PROCEDURE `GET_UserById`
 (
 	IN userId BINARY(16)
 )

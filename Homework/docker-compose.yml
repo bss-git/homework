@@ -65,7 +65,31 @@ services:
     ports:
       - "3308:3306"
 
+  tarantool:
+    image: tarantool/tarantool:1.10.2
+    container_name: tarantool
+    hostname: tarantool
+    volumes:
+      - tarantool_data:/var/lib/tarantool
+      - ./compose/tarantool_lua:/opt/tarantool
+    ports:
+      - "3301:3301"
+
+  replicator:
+    image: replicator
+    depends_on:
+      - mysql
+      - tarantool
+    container_name: replicator
+    hostname: replicator
+    privileged: true
+    volumes:
+      - replicator_data:/home/replicator
+      - ./compose/tarantool_replication:/home/replicator_share
+
 volumes:
   homework_data:
   homework_data_slave1:
   homework_data_slave2:
+  tarantool_data:
+  replicator_data:

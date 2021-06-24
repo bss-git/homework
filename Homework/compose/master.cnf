@@ -7,3 +7,4 @@ gtid_mode=ON
 log-slave-updates
 enforce-gtid-consistency
 rpl_semi_sync_master_enabled=1
+skip_ssl
