@@ -88,11 +88,25 @@ services:
       - ./compose/tarantool_replication:/home/replicator_share
 
   kafka:
+    depends_on:
+      - zookeeper
     image: 'bitnami/kafka:latest'
+    container_name: kafka
+    hostname: kafka
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
     - kafka:/bitnami/kafka
     ports:
       - "9092:9092"
+
+  zookeeper:
+    container_name: zookeeper
+    hostname: zookeeper
+    image: 'bitnami/zookeeper:latest'
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
 
 volumes:
   homework_data:
