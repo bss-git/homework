@@ -19,7 +19,7 @@ namespace Homework.Updates
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostUpdate(string message)
+        public async Task<IActionResult> PostUpdate([FromBody] string message)
         {
             if (string.IsNullOrWhiteSpace(message))
                 return BadRequest("Заполните текст сообщения");
@@ -33,8 +33,8 @@ namespace Homework.Updates
             };
 
             await _repo.SaveAsync(update);
-            
-            return Ok("Сообщение отправлено");
+
+            return new JsonResult(new { username = update.UserName, timestamp = update.Timestamp.ToString() });
         }
     }
 }
