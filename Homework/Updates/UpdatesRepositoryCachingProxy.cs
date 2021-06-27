@@ -1,5 +1,6 @@
 ﻿using Homework.Events;
 using Homework.Friends;
+using Homework.Persistence;
 using Homework.Updates.Dto;
 using Microsoft.Extensions.Caching.Memory;
 using Nito.Collections;
@@ -14,7 +15,7 @@ namespace Homework.Updates
 {
     public class UpdatesRepositoryCachingProxy : IUpdatesRepository
     {
-        private readonly IUpdatesRepository _repo;
+        private readonly MySqlUpdatesRepository _repo;
         private readonly IFriendLinkRepository _friensRepo;
         private IMemoryCache _cache;
         private KafkaConsumer _kafkaConsumer;
@@ -22,7 +23,7 @@ namespace Homework.Updates
 
         private Channel<UpdateViewModel> _updatesQueue = Channel.CreateUnbounded<UpdateViewModel>();
 
-        public UpdatesRepositoryCachingProxy(IUpdatesRepository repository, IFriendLinkRepository friensRepo, IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer)
+        public UpdatesRepositoryCachingProxy(MySqlUpdatesRepository repository, IFriendLinkRepository friensRepo, IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer)
         {
             _repo = repository;
             _friensRepo = friensRepo;
@@ -30,7 +31,8 @@ namespace Homework.Updates
             _kafkaConsumer = kafkaConsumer;
             _kafkaProducer = kafkaProducer;
             Task.Run(CacheUpdateTask);
-            _kafkaConsumer.ConsumeAsync<UpdateViewModel>("updates", update => _updatesQueue.Writer.WriteAsync(update), CancellationToken.None);
+            Task.Run(() => _kafkaConsumer.ConsumeAsync<UpdateViewModel>("updates",
+                update => _updatesQueue.Writer.WriteAsync(update), CancellationToken.None));
         }
 
         public async Task<IEnumerable<UpdateViewModel>> GetListAsync(Guid userId)
@@ -59,7 +61,7 @@ namespace Homework.Updates
             await foreach (var update in _updatesQueue.Reader.ReadAllAsync())
             {
                 var friends = await _friensRepo.GetFriendIdsAsync(update.UserId);
-                foreach(var friend in friends)
+                foreach(var friend in friends.Prepend(update.UserId))
                 {
                     if (_cache.TryGetValue<Deque<UpdateViewModel>>(friend, out var updates))
                     {

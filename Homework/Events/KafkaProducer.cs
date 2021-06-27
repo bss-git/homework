@@ -10,17 +10,17 @@ namespace Homework.Events
 {
     public class KafkaProducer
     {
-        private ProducerConfig _config;
+        private IProducer<Null,string> _producer;
 
         public KafkaProducer(IOptions<KafkaOptions> options)
         {
-            _config = new ProducerConfig { BootstrapServers = options.Value.BootstrapServers };
+            var config = new ProducerConfig { BootstrapServers = options.Value.BootstrapServers };
+            _producer = new ProducerBuilder<Null, string>(config).Build();
         }
 
         public Task ProduceAsync(string topic, object data)
         {
-            using var p = new ProducerBuilder<Null, string>(_config).Build();
-            return p.ProduceAsync(topic, new Message<Null, string> { Value = JsonConvert.SerializeObject(data) });
+            return _producer.ProduceAsync(topic, new Message<Null, string> { Value = JsonConvert.SerializeObject(data) });
         }
     }
 }
