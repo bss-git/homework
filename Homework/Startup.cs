@@ -6,6 +6,7 @@ using Homework.Auth;
 using Homework.Events;
 using Homework.Friends;
 using Homework.Persistence;
+using Homework.Persistence.Tarantool;
 using Homework.Updates;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -48,6 +49,10 @@ namespace Homework
             services.AddScoped<CurrentUserManager>();
             services.AddSingleton<IPasswordManager, HashingMySqlPasswordManager>();
 
+            services.AddOptions<TaratoolOptions>().Bind(Configuration.GetSection("Tarantool"));
+            services.AddSingleton<TarantoolDb>();
+            services.AddSingleton<MySqlUserRepository>();
+            //services.AddSingleton<IUserRepository, TarantoolUserRepository>();
             services.AddSingleton<IUserRepository, MySqlUserRepository>();
             services.AddSingleton<UserCreator>();
 
@@ -62,6 +67,7 @@ namespace Homework
             services.AddSingleton<KafkaConsumer>();
             services.AddSingleton<MySqlUpdatesRepository>();
             services.AddSingleton<IUpdatesRepository, UpdatesRepositoryCachingProxy>();
+
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 
