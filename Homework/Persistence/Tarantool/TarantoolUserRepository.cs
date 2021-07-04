@@ -50,9 +50,10 @@ namespace Homework.Persistence.Tarantool
             return _mySqlRepo.GetOfferedFriendsAsync(userId);
         }
 
-        public Task SaveAsync(User person)
+        public async Task SaveAsync(User person)
         {
-            return _tarantoolDb.CallAsync("insert_user", UserMapping(person));
+            await _mySqlRepo.SaveAsync(person);
+            await _tarantoolDb.CallAsync("insert_user", UserMapping(person));
         }
 
         public Task<IEnumerable<UserShortDto>> SearchAsync(string name, string surname)
