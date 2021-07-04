@@ -74,6 +74,7 @@ services:
       - ./compose/tarantool_lua:/opt/tarantool
     ports:
       - "3301:3301"
+    command: tarantool /opt/tarantool/config.lua
 
   #replicator:
   #  image: replicator

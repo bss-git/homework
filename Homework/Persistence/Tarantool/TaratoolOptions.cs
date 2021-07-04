@@ -2,6 +2,6 @@
 {
     public class TaratoolOptions
     {
-        public string ConnectionsString { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

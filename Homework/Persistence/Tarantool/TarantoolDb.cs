@@ -14,32 +14,18 @@ namespace Homework.Persistence.Tarantool
 
         public TarantoolDb(IOptions<TaratoolOptions> options)
         {
-            _connectionString = options.Value.ConnectionsString;
+            _connectionString = options.Value.ConnectionString;
         }
-        public async Task<TValue> GetItemAsync<TKey, TValue>(string spaceName, TKey key)
+        public async Task<TResult[]> CallAsync<TParam, TResult>(string procedureName, TParam parameters)
         {
             using var box = await Box.Connect(_connectionString);
-            var schema = box.GetSchema();
-            var space = schema[spaceName];
-            var response = await space.Select<TKey, TValue>(key);
-
-            return response.Data.FirstOrDefault();
+            return (await box.Call<TParam, TResult>(procedureName, parameters)).Data;
         }
 
-        public async Task InsertAsync<T>(string spaceName, T value)
+        public async Task CallAsync<TParam>(string procedureName, TParam parameters)
         {
             using var box = await Box.Connect(_connectionString);
-            var schema = box.GetSchema();
-            var space = schema[spaceName];
-            await space.Insert(value);
-        }
-
-        public async Task DeleteAsync<TKey>(string spaceName, TKey key)
-        {
-            using var box = await Box.Connect(_connectionString);
-            var schema = box.GetSchema();
-            var space = schema[spaceName];
-            await space.Delete<ValueTuple<TKey>, object>(ValueTuple.Create(key));
+            await box.Call(procedureName, parameters);
         }
     }
 }

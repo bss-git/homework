@@ -52,8 +52,7 @@ namespace Homework
             services.AddOptions<TaratoolOptions>().Bind(Configuration.GetSection("Tarantool"));
             services.AddSingleton<TarantoolDb>();
             services.AddSingleton<MySqlUserRepository>();
-            //services.AddSingleton<IUserRepository, TarantoolUserRepository>();
-            services.AddSingleton<IUserRepository, MySqlUserRepository>();
+            services.AddSingleton<IUserRepository, TarantoolUserRepository>();
             services.AddSingleton<UserCreator>();
 
             services.AddSingleton<IFriendOfferRepository, MySqlFriendOfferRepository>();
