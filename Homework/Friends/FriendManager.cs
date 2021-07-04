@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Homework.Events;
+using Homework.Friends.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,11 +11,13 @@ namespace Homework.Friends
     {
         private IFriendOfferRepository _offerRepository;
         private IFriendLinkRepository _friendLinkRepository;
+        private readonly KafkaProducer _kafkaProducer;
 
-        public FriendManager(IFriendOfferRepository offerRepository, IFriendLinkRepository friendLinkRepository)
+        public FriendManager(IFriendOfferRepository offerRepository, IFriendLinkRepository friendLinkRepository, KafkaProducer kafkaProducer)
         {
             _offerRepository = offerRepository;
             _friendLinkRepository = friendLinkRepository;
+            _kafkaProducer = kafkaProducer;
         }
 
         public async Task SendOfferAsync(Guid from, Guid to)
@@ -28,6 +32,7 @@ namespace Homework.Friends
 
             offer = new FriendOffer(Guid.NewGuid(), from, to);
             await _offerRepository.SaveAsync(offer);
+
         }
 
         public async Task AcceptOfferAsync(Guid from, Guid to)
@@ -38,6 +43,8 @@ namespace Homework.Friends
 
             await _offerRepository.DeleteAync(offer.Id);
             await _friendLinkRepository.SaveAsync(from, to);
+
+            _ = _kafkaProducer.ProduceAsync("friendLinkEvents", new FriendLinkEvent { From = from, To = to, Status = FriendStatus.Friend });
         }
 
         public async Task<FriendStatus> GetFriendStatusAsync (Guid from, Guid to)
