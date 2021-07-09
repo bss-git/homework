@@ -21,7 +21,7 @@ namespace Homework.Persistence.Tarantool
 
         public async Task<User> GetAsync(string login)
         {
-            var result = await _tarantoolDb.CallAsync<TarantoolTuple<string>, TarantoolTuple<string, byte[], string, string, DateTime, string, Gender, string>>
+            var result = await _tarantoolDb.CallAsync<TarantoolTuple<string>, TarantoolTuple<byte[], string, string, string, DateTime, string, Gender, string>>
                 ("get_user_by_login", TarantoolTuple.Create(login));
 
             if (!result.Any())
@@ -61,14 +61,14 @@ namespace Homework.Persistence.Tarantool
             return _mySqlRepo.SearchAsync(name, surname);
         }
 
-        private static TarantoolTuple<string, byte[], string, string, DateTime, string, Gender, string> UserMapping(User user)
+        private static TarantoolTuple<byte[], string, string, string, DateTime, string, Gender, string> UserMapping(User user)
         {
-            return TarantoolTuple.Create(user.Login, user.Id.ToByteArray(), user.Name, user.Surname, user.BirthDate, user.City, user.Gender, user.Interest);
+            return TarantoolTuple.Create(user.Id.ToByteArray(), user.Login, user.Name, user.Surname, user.BirthDate, user.City, user.Gender, user.Interest);
         }
 
-        private static User UserMapping(TarantoolTuple<string, byte[], string, string, DateTime, string, Gender, string> tuple)
+        private static User UserMapping(TarantoolTuple<byte[], string, string, string, DateTime, string, Gender, string> tuple)
         {
-            return new User(new Guid(tuple.Item2), tuple.Item1)
+            return new User(new Guid(tuple.Item1), tuple.Item2)
             {
                 Name = tuple.Item3,
                 Surname = tuple.Item4,
