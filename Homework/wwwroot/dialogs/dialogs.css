@@ -1,0 +1,55 @@
+﻿body {
+    background-color: aquamarine;
+}
+
+.chat_container {
+    border: 1px solid red;
+    width: 50vw;
+    height: 80vh;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 2fr 10fr 1fr;
+}
+.contact_list {
+    grid-row: 1/4;
+    overflow: auto;
+    background-color: azure;
+}
+
+.contact_list div {
+    height: 3em;
+}
+
+.message_container {
+    display: grid;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("https://flor2u.ru/images/uploads/conversion/504/50458ff517723a69daa9c14ace3ae5db/50458ff517723a69daa9c14ace3ae5db-flor.detail.gallery.jpg");
+    overflow: auto;
+    grid-gap: 3px;
+    padding: 0 3px 0 3px;
+}
+.message {
+    background-color: white;
+    padding: 2px 4px 2px 4px;
+    border-radius: 5px;
+    justify-self: start;
+}
+.message.my_message{
+    background-color: antiquewhite;
+    justify-self: end;
+}
+.input_container {
+    background-color: white;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.input_container input {
+    flex-basis: 80%;
+}
+.input_container button {
+    flex-basis: 20%;
+}

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Homework.Users.Dto.UserShortDto>
+
+<div class="chat_container">
+    <div class="contact_list list-group">
+        @foreach (var friend in Model)
+        {
+            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@friend.Login</h5>
+                </div>
+                <p class="mb-1">@friend.Name @friend.Surname</p>
+            </div>
+        }
+    </div>
+    <div class="current_contact">
+        <div>Петян</div>
+    </div>
+    <div class="message_container">
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела? я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела. я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как делая на связи. ты где???я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div><div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела? я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела. я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как делая на связи. ты где???я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div><div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела? я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела. я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как делая на связи. ты где???я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message my_message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+        <div class="message">
+            Привет, как дела?
+        </div>
+    </div>
+    <div class="input_container">
+        <input type="text" id="send_text" />
+        <button id="send_button">Отправить</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/dialogs/dialogs.js" type="text/javascript"></script>
+}
+
+@section Styles {
+    <link href="~/dialogs/dialogs.css" rel="stylesheet" type="text/css" />
+}
