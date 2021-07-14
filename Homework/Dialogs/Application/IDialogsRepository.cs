@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Homework.Dialogs.Application
 {
-    internal interface IDialogsRepository
+    public interface IDialogsRepository
     {
-        public Task Save(Guid from, Guid to, string text);
+        Task SaveAsync(Guid from, Guid to, string text, DateTime timestamp);
 
-        public Task<IEnumerable<MessageDto>> GetList(Guid user1, Guid user2);
+        Task<IEnumerable<Message>> GetListAsync(Guid user1, Guid user2);
     }
 }

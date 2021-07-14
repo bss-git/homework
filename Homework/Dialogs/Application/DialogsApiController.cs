@@ -15,19 +15,26 @@ namespace Homework.Dialogs.Application
     [Authorize]
     public class DialogsApiController : ControllerBase
     {
-        private IDialogsRepository _dialogsRepository;
+        private readonly IDialogsRepository _dialogsRepository;
+
+        public DialogsApiController(IDialogsRepository dialogsRepository)
+        {
+            _dialogsRepository = dialogsRepository;
+        }
 
         [HttpPost("message")]
         public async Task<IActionResult> PostMessage(PostMessageCommand command)
         {
-            await _dialogsRepository.Save(User.Id(), command.To, command.Text);
+            await _dialogsRepository.SaveAsync(User.Id(), command.To, command.Text, DateTime.UtcNow);
             return Ok();
         }
 
         [HttpGet("{interlocutorId}")]
         public async Task<IActionResult> GetMessages(Guid interlocutorId)
         {
-            var messages = await _dialogsRepository.GetList(User.Id(), interlocutorId);
+            var userId = User.Id();
+            var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId))
+                .Select(x => new MessageClientDto(x, x.From == userId));
             return new JsonResult(messages);
         }
     }

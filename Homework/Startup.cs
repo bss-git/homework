@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Homework.Auth;
+using Homework.Dialogs.Application;
+using Homework.Dialogs.Persistense;
 using Homework.Events;
 using Homework.Friends;
 using Homework.Persistence;
@@ -67,6 +69,7 @@ namespace Homework
             services.AddSingleton<MySqlUpdatesRepository>();
             services.AddSingleton<IUpdatesRepository, UpdatesRepositoryCachingProxy>();
 
+            services.AddSingleton<IDialogsRepository, InMemoryDialogsRepository>();
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 

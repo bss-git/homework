@@ -4,7 +4,7 @@
     <div class="contact_list">
         @foreach (var friend in Model)
         {
-            <div class="list-group-item list-group-item-action">
+            <div class="contact_item list-group-item list-group-item-action" data-user-id="@friend.Id" data-contact-name="@friend.Login">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">@friend.Login</h5>
                 </div>
@@ -13,99 +13,14 @@
         }
     </div>
     <div class="current_contact card-header">
-        Чат с <span>Петян</span>
+        <span id="contact_name">Выберите контакт</span>
     </div>
     <div class="message_container">
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела? я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела. я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как делая на связи. ты где???я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div><div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела? я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела. я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как делая на связи. ты где???я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div><div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела? я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела. я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как делая на связи. ты где???я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??я на связи. ты где??
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message my_message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            Привет, как дела?
-        </div>
-        <div class="message">
-            asddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasddddddddasdddddddd
-        </div>
     </div>
     <div class="input-group input_container">
-        <input type="text" id="send_text" placeholder="Введите сообщение">
+        <input type="text" id="send_text" placeholder="Введите сообщение" disabled>
         <div class="input-group-append">
-            <input id="send_button" type="button" value="Отправить" class="btn btn-outline-primary" />
+            <input id="send_button" type="button" value="Отправить" class="btn btn-outline-primary" disabled />
         </div>
     </div>
 </div>

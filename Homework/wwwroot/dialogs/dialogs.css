@@ -23,6 +23,7 @@
     overflow: auto;
     grid-gap: 3px;
     padding: 0 3px 0 3px;
+    grid-auto-rows: min-content;
 }
 .message {
     background-color: white;
