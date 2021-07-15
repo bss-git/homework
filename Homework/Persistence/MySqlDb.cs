@@ -38,7 +38,12 @@ namespace Homework.Persistence
             _replicasConnectionString = sb.ConnectionString;
         }
 
-        public async Task ExecuteNonQueryAsync(string procedureName, params MySqlParameter[] parameters)
+        public Task ExecuteNonQueryAsync(string procedureName, params MySqlParameter[] parameters)
+        {
+            return ExecuteNonQueryAsync(_masterConnectionString, procedureName, parameters);
+        }
+
+        public async Task ExecuteNonQueryAsync(string connectionString, string procedureName, params MySqlParameter[] parameters)
         {
             try
             {
@@ -93,12 +98,17 @@ namespace Homework.Persistence
         //    return GetListAsync<T>(procedureName, fromReader, parameters, false);
         //}
 
-        public async Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
+        public Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
+        {
+            return GetListAsync<T>(_masterConnectionString, procedureName, fromReader, parameters);
+        }
+
+        public async Task<List<T>> GetListAsync<T>(string connectionString, string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
         {
             try
             {
                 //await using var conn = useReplicas ? new MySqlConnection(_replicasConnectionString) : new MySqlConnection(_clusterConnectionString);
-                await using var conn = new MySqlConnection(_masterConnectionString);
+                await using var conn = new MySqlConnection(connectionString);
                 var cmd = conn.CreateCommand();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = procedureName;

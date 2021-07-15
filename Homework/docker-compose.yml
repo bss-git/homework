@@ -113,6 +113,38 @@ services:
     volumes:
       - "zookeeper_data:/bitnami"
 
+  dialogs-db1:
+    container_name: dialogs-db1
+    hostname: dialogs-db1
+    image: dialogs-db1
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - dialogs-db1_data:/var/lib/mysql
+      - ./compose/dialogs_db:/docker-entrypoint-initdb.d
+    ports:
+      - "3309:3306"
+
+  dialogs-db2:
+    container_name: dialogs-db2
+    hostname: dialogs-db2
+    image: dialogs-db2
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - dialogs-db2_data:/var/lib/mysql
+      - ./compose/dialogs_db:/docker-entrypoint-initdb.d
+    ports:
+      - "3310:3306"
+
 volumes:
   homework_data:
   homework_data_slave1:
@@ -121,3 +153,5 @@ volumes:
   replicator_data:
   kafka:
   zookeeper_data:
+  dialogs-db1_data:
+  dialogs-db2_data:

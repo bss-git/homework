@@ -7,7 +7,7 @@ namespace Homework.Dialogs.Application
 {
     public interface IDialogsRepository
     {
-        Task SaveAsync(Guid from, Guid to, string text, DateTime timestamp);
+        Task SaveAsync(Message message);
 
         Task<IEnumerable<Message>> GetListAsync(Guid user1, Guid user2);
     }

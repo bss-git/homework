@@ -4,6 +4,8 @@ namespace Homework.Dialogs.Application.Dto
 {
     public class Message
     {
+        public Guid Id { get; }
+
         public Guid From { get; }
 
         public Guid To { get; }
@@ -14,6 +16,15 @@ namespace Homework.Dialogs.Application.Dto
 
         public Message(Guid from, Guid to, string text, DateTime timestamp)
         {
+            From = from;
+            To = to;
+            Text = text;
+            Timestamp = timestamp;
+        }
+
+        public Message(Guid id, Guid from, Guid to, string text, DateTime timestamp)
+        {
+            Id = id;
             From = from;
             To = to;
             Text = text;

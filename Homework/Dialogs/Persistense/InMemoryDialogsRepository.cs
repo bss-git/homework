@@ -17,11 +17,11 @@ namespace Homework.Dialogs.Persistense
                 .OrderBy(x => x.Timestamp));
         }
 
-        public Task SaveAsync(Guid from, Guid to, string text, DateTime timestamp)
+        public Task SaveAsync(Message message)
         {
             lock(_list)
             {
-                _list.Add(new Message(from, to, text, timestamp));
+                _list.Add(message);
             }
 
             return Task.CompletedTask;

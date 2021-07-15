@@ -25,7 +25,9 @@ namespace Homework.Dialogs.Application
         [HttpPost("message")]
         public async Task<IActionResult> PostMessage(PostMessageCommand command)
         {
-            await _dialogsRepository.SaveAsync(User.Id(), command.To, command.Text, DateTime.UtcNow);
+            var message = new Message(User.Id(), command.To, command.Text, DateTime.UtcNow);
+            await _dialogsRepository.SaveAsync(message);
+
             return Ok();
         }
 
@@ -35,6 +37,7 @@ namespace Homework.Dialogs.Application
             var userId = User.Id();
             var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId))
                 .Select(x => new MessageClientDto(x, x.From == userId));
+
             return new JsonResult(messages);
         }
     }
