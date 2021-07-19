@@ -21,6 +21,8 @@ namespace Homework.Dialogs.Persistense
         {
             _mySql = mySqlDb;
             _shardSelector = shardSelector;
+
+            Task.Run(Reshard);
         }
 
         private static Message FromReader(MySqlDataReader reader)
@@ -40,7 +42,8 @@ namespace Homework.Dialogs.Persistense
                 new MySqlParameter("@from", message.From.ToByteArray()),
                 new MySqlParameter("@to", message.To.ToByteArray()),
                 new MySqlParameter("@text", message.Text),
-                new MySqlParameter("@timestamp", message.Timestamp)
+                new MySqlParameter("@timestamp", message.Timestamp),
+                new MySqlParameter("@hashCode", _shardSelector.GetHashCode(message.From, message.To))
             });
         }
 
@@ -50,6 +53,39 @@ namespace Homework.Dialogs.Persistense
                 "GET_MessagesList", FromReader, new[] {
                 new MySqlParameter("@user1", user1.ToByteArray()),
                 new MySqlParameter("@user2", user2.ToByteArray()) });
+        }
+
+        private async Task Reshard()
+        {
+            foreach (var shard in _shardSelector.GetShards())
+            {
+                var messages = await GetMessagesToMoveAsync(shard);
+                if (messages.Count == 0)
+                    continue;
+                
+                foreach(var message in messages)
+                {
+                    await SaveAsync(message);
+                }
+
+                await DeleteMessagesToMoveAsync(shard);
+            }
+        }
+
+        private async Task<List<Message>> GetMessagesToMoveAsync(Shard shard)
+        {
+            return await _mySql.GetListAsync(shard.ConnectionString,
+                "Get_MessagesHashCodeNotIn", FromReader, new[] {
+                new MySqlParameter("@min", shard.Min),
+                new MySqlParameter("@max", shard.Max) });
+        }
+
+        private Task DeleteMessagesToMoveAsync(Shard shard)
+        {
+            return _mySql.ExecuteNonQueryAsync(shard.ConnectionString,
+                "Delete_MessagesHashCodeNotIn", new[] {
+                new MySqlParameter("@min", shard.Min),
+                new MySqlParameter("@max", shard.Max) });
         }
     }
 }

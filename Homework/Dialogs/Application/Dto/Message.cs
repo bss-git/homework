@@ -16,6 +16,7 @@ namespace Homework.Dialogs.Application.Dto
 
         public Message(Guid from, Guid to, string text, DateTime timestamp)
         {
+            Id = Guid.NewGuid();
             From = from;
             To = to;
             Text = text;

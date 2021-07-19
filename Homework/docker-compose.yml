@@ -5,6 +5,12 @@ services:
     build:
       dockerfile: Homework/Dockerfile
       context: ..
+    depends_on:
+      - mysql
+      - tarantool
+      - kafka
+      - dialogs-db1
+      - dialogs-db2
     ports:
       - "80:80"
     environment:
@@ -116,7 +122,7 @@ services:
   dialogs-db1:
     container_name: dialogs-db1
     hostname: dialogs-db1
-    image: dialogs-db1
+    image: mysql
     command: --default-authentication-plugin=mysql_native_password
     cap_add:
       - SYS_NICE
@@ -132,7 +138,7 @@ services:
   dialogs-db2:
     container_name: dialogs-db2
     hostname: dialogs-db2
-    image: dialogs-db2
+    image: mysql
     command: --default-authentication-plugin=mysql_native_password
     cap_add:
       - SYS_NICE

@@ -47,7 +47,7 @@ namespace Homework.Persistence
         {
             try
             {
-                using var conn = new MySqlConnection(_masterConnectionString);
+                using var conn = new MySqlConnection(connectionString);
                 var cmd = conn.CreateCommand();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = procedureName;
