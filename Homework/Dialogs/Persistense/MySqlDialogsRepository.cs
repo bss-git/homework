@@ -9,6 +9,7 @@ using Homework.Friends;
 using Homework.Persistence;
 using Homework.Dialogs.Application;
 using Homework.Dialogs.Application.Dto;
+using Microsoft.Extensions.Logging;
 
 namespace Homework.Dialogs.Persistense
 {
@@ -16,11 +17,13 @@ namespace Homework.Dialogs.Persistense
     {
         private MySqlDb _mySql;
         private readonly DialogsShardSelector _shardSelector;
+        private readonly ILogger<MySqlDialogsRepository> _logger;
 
-        public MySqlDialogsRepository(MySqlDb mySqlDb, DialogsShardSelector shardSelector)
+        public MySqlDialogsRepository(MySqlDb mySqlDb, DialogsShardSelector shardSelector, ILogger<MySqlDialogsRepository> logger)
         {
             _mySql = mySqlDb;
             _shardSelector = shardSelector;
+            _logger = logger;
 
             Task.Run(Reshard);
         }
@@ -58,28 +61,43 @@ namespace Homework.Dialogs.Persistense
 
         private async Task Reshard()
         {
-            foreach (var shard in _shardSelector.GetShards())
+            _logger.LogInformation("start resharding");
+            var shards = _shardSelector.GetShards();
+            foreach (var shard in shards)
             {
+                _logger.LogInformation($"found {shards.Count} shards");
+                _logger.LogInformation($"start extracting from {shard.ConnectionString}");
+
                 while (true)
                 {
                     try
                     {
                         var messages = await GetMessagesToMoveAsync(shard);
                         if (messages.Count == 0)
+                        {
+                            _logger.LogInformation($"found 0 nonconsistent rows on {shard.ConnectionString}");
+                            _logger.LogInformation($"{shard.ConnectionString} done");
+
                             continue;
+                        }
+                        _logger.LogInformation($"moving {messages.Count} nonconsistent rows from {shard.ConnectionString}");
 
                         foreach (var message in messages)
                         {
                             await SaveAsync(message);
                         }
 
+                        _logger.LogInformation($"deleting {messages.Count} nonconsistent rows from {shard.ConnectionString}");
+
                         await DeleteMessagesToMoveAsync(shard);
+                        
+                        _logger.LogInformation($"{shard.ConnectionString} done");
 
                         break;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-
+                        _logger.LogError(ex.ToString());
                     }
                 }
             }
