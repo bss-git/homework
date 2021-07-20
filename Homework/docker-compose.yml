@@ -151,6 +151,22 @@ services:
     ports:
       - "3310:3306"
 
+  #dialogs-db3:
+  #  container_name: dialogs-db3
+  #  hostname: dialogs-db3
+  #  image: mysql
+  #  command: --default-authentication-plugin=mysql_native_password
+  #  cap_add:
+  #    - SYS_NICE
+  #  restart: "no"
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: example
+  #  volumes:
+  #    - dialogs-db3_data:/var/lib/mysql
+  #    - ./compose/dialogs_db:/docker-entrypoint-initdb.d
+  #  ports:
+  #    - "3311:3306"
+
 volumes:
   homework_data:
   homework_data_slave1:
@@ -161,3 +177,4 @@ volumes:
   zookeeper_data:
   dialogs-db1_data:
   dialogs-db2_data:
+  dialogs-db3_data:
