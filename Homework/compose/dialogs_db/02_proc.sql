@@ -42,7 +42,7 @@ CREATE PROCEDURE `INSERT_Messages`
     IN `from` binary(16),
     IN `to` binary(16),
     IN `text` TEXT,
-    IN `timestamp` Date,
+    IN `timestamp` Datetime,
     IN `hashCode` int
 )
 BEGIN

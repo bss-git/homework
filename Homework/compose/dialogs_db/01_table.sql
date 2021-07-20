@@ -5,7 +5,7 @@ CREATE TABLE `dialogs`.`Messages` (
   `From` binary(16) NOT NULL,
   `To` binary(16) NOT NULL,
   `Text` TEXT NOT NULL,
-  `Timestamp` Date NOT NULL,
+  `Timestamp` Datetime NOT NULL,
   `HashCode` int NOT NULL,
 PRIMARY KEY (`Id`));
 

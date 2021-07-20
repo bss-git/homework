@@ -49,26 +49,39 @@ namespace Homework.Dialogs.Persistense
 
         public async Task<IEnumerable<Message>> GetListAsync(Guid user1, Guid user2)
         {
-            return await _mySql.GetListAsync(_shardSelector.GetConnectionString(user1, user2),
+            return (await _mySql.GetListAsync(_shardSelector.GetConnectionString(user1, user2),
                 "GET_MessagesList", FromReader, new[] {
                 new MySqlParameter("@user1", user1.ToByteArray()),
-                new MySqlParameter("@user2", user2.ToByteArray()) });
+                new MySqlParameter("@user2", user2.ToByteArray()) }))
+                .OrderBy(x => x.Timestamp);
         }
 
         private async Task Reshard()
         {
             foreach (var shard in _shardSelector.GetShards())
             {
-                var messages = await GetMessagesToMoveAsync(shard);
-                if (messages.Count == 0)
-                    continue;
-                
-                foreach(var message in messages)
+                while (true)
                 {
-                    await SaveAsync(message);
-                }
+                    try
+                    {
+                        var messages = await GetMessagesToMoveAsync(shard);
+                        if (messages.Count == 0)
+                            continue;
 
-                await DeleteMessagesToMoveAsync(shard);
+                        foreach (var message in messages)
+                        {
+                            await SaveAsync(message);
+                        }
+
+                        await DeleteMessagesToMoveAsync(shard);
+
+                        break;
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
         }
 
