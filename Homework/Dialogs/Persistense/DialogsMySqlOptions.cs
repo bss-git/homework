@@ -9,6 +9,8 @@ namespace Homework.Dialogs.Persistense
     {
         public string Shards { get; set; }
 
+        public string FailedNodes { get; set; }
+
         public string Database { get; set; }
 
         public string User { get; set; }

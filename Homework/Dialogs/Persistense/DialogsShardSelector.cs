@@ -10,6 +10,7 @@ namespace Homework.Dialogs.Persistense
     public class DialogsShardSelector
     {
         private List<Shard> _shards = new List<Shard>();
+        private List<Shard> _failedNodes = new List<Shard>();
 
         public DialogsShardSelector(IOptions<DialogsMySqlOptions> options)
         {
@@ -32,11 +33,28 @@ namespace Homework.Dialogs.Persistense
 
                 _shards.Add(new Shard(min, max, sb.ToString()));
             }
+
+            var failedNodesStrings = options.Value.FailedNodes.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            for (var i = 0; i < failedNodesStrings.Length; i++)
+            {
+                var sb = new MySqlConnectionStringBuilder();
+                sb.Server = failedNodesStrings[i].Trim();
+                sb.Pooling = true;
+                sb.UserID = options.Value.User;
+                sb.Password = options.Value.Password;
+                sb.Database = options.Value.Database;
+
+                var min = -1;
+                var max = -1;
+
+                _failedNodes.Add(new Shard(min, max, sb.ToString()));
+            }
         }
 
-        internal IReadOnlyList<Shard> GetShards()
+        internal IReadOnlyList<Shard> GetShards(bool includeFailed = false)
         {
-            return _shards;
+            return includeFailed ? _shards.Concat(_failedNodes).ToList() : _shards;
         }
 
         internal string GetConnectionString(Guid user1, Guid user2)
