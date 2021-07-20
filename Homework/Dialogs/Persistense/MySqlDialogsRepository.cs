@@ -63,44 +63,59 @@ namespace Homework.Dialogs.Persistense
         {
             _logger.LogInformation("start resharding");
             var shards = _shardSelector.GetShards();
-            foreach (var shard in shards)
+            while(true)
             {
-                _logger.LogInformation($"found {shards.Count} shards");
-                _logger.LogInformation($"start extracting from {shard.ConnectionString}");
-
-                while (true)
+                try
                 {
-                    try
+                    foreach (var shard in shards)
                     {
-                        var messages = await GetMessagesToMoveAsync(shard);
-                        if (messages.Count == 0)
+                        _logger.LogInformation($"found {shards.Count} shards");
+                        _logger.LogInformation($"start extracting from {shard.ConnectionString}");
+
+                        try
                         {
-                            _logger.LogInformation($"found 0 nonconsistent rows on {shard.ConnectionString}");
-                            _logger.LogInformation($"{shard.ConnectionString} done");
-
-                            continue;
+                            await Reshard(shard);
                         }
-                        _logger.LogInformation($"moving {messages.Count} nonconsistent rows from {shard.ConnectionString}");
-
-                        foreach (var message in messages)
+                        catch (Exception ex)
                         {
-                            await SaveAsync(message);
+                            _logger.LogError(ex.ToString());
                         }
-
-                        _logger.LogInformation($"deleting {messages.Count} nonconsistent rows from {shard.ConnectionString}");
-
-                        await DeleteMessagesToMoveAsync(shard);
-                        
-                        _logger.LogInformation($"{shard.ConnectionString} done");
-
-                        break;
                     }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.ToString());
-                    }
+
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    _logger.LogError($"error resharding, retry");
+
+                    await Task.Delay(TimeSpan.FromSeconds(1));
                 }
             }
+        }
+
+        private async Task Reshard(Shard shard)
+        {
+            var messages = await GetMessagesToMoveAsync(shard);
+            if (messages.Count == 0)
+            {
+                _logger.LogInformation($"found 0 nonconsistent rows on {shard.ConnectionString}");
+                _logger.LogInformation($"{shard.ConnectionString} done");
+
+                return;
+            }
+            _logger.LogInformation($"moving {messages.Count} nonconsistent rows from {shard.ConnectionString}");
+
+            foreach (var message in messages)
+            {
+                await SaveAsync(message);
+            }
+
+            _logger.LogInformation($"deleting {messages.Count} nonconsistent rows from {shard.ConnectionString}");
+
+            await DeleteMessagesToMoveAsync(shard);
+
+            _logger.LogInformation($"{shard.ConnectionString} done");
         }
 
         private async Task<List<Message>> GetMessagesToMoveAsync(Shard shard)
