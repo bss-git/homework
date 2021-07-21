@@ -10,11 +10,13 @@ using Homework.Friends;
 using Homework.Persistence;
 using Homework.Persistence.Tarantool;
 using Homework.Updates;
+using Homework.Updates.SignalR;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +43,8 @@ namespace Homework
                     options.LoginPath = new PathString("/auth/login");
                 });
 
+            services.AddSignalR();
+
             services.AddControllersWithViews();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -49,6 +53,7 @@ namespace Homework
             services.AddSingleton<MySqlDb>();
 
             services.AddScoped<CurrentUserManager>();
+            services.AddSingleton<IUserIdProvider, ClaimsUserIdProvider>();
             services.AddSingleton<IPasswordManager, HashingMySqlPasswordManager>();
 
             services.AddOptions<TaratoolOptions>().Bind(Configuration.GetSection("Tarantool"));
@@ -68,6 +73,7 @@ namespace Homework
             services.AddSingleton<KafkaConsumer>();
             services.AddSingleton<MySqlUpdatesRepository>();
             services.AddSingleton<IUpdatesRepository, UpdatesRepositoryCachingProxy>();
+            services.AddSingleton<UpdatesMessageBus>();
 
             services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
             services.AddSingleton<DialogsShardSelector>();
@@ -101,7 +107,9 @@ namespace Homework
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<UpdatesHub>("/api/updates/hub");
             });
+
         }
     }
 }
