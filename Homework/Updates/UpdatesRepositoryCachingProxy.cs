@@ -21,16 +21,18 @@ namespace Homework.Updates
         private IMemoryCache _cache;
         private KafkaConsumer _kafkaConsumer;
         private KafkaProducer _kafkaProducer;
-
+        private readonly UpdatesMessageBus _messageBus;
         private Channel<object> _changesQueue = Channel.CreateUnbounded<object>();
 
-        public UpdatesRepositoryCachingProxy(MySqlUpdatesRepository repository, IFriendLinkRepository friensRepo, IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer)
+        public UpdatesRepositoryCachingProxy(MySqlUpdatesRepository repository, IFriendLinkRepository friensRepo,
+            IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer, UpdatesMessageBus messageBus)
         {
             _repo = repository;
             _friensRepo = friensRepo;
             _cache = cache;
             _kafkaConsumer = kafkaConsumer;
             _kafkaProducer = kafkaProducer;
+            _messageBus = messageBus;
             Task.Run(CacheUpdateTask);
             Task.Run(() => _kafkaConsumer.ConsumeAsync<UpdateViewModel>("updates",
                 update => _changesQueue.Writer.WriteAsync(update), CancellationToken.None));
@@ -50,6 +52,13 @@ namespace Homework.Updates
         {
             await _repo.SaveAsync(update);
             _ = _kafkaProducer.ProduceAsync("updates", update);
+                        
+            var friends = await _friensRepo.GetFriendIdsAsync(update.UserId);
+
+            foreach (var friend in friends.Prepend(update.UserId))
+            {
+                _messageBus.Publish(new UpdateMessage { Recepient = friend, Update = update });
+            }
         }
 
         private async Task CacheUpdateTask()
@@ -82,6 +91,7 @@ namespace Homework.Updates
         private async Task HandleNewUpdateEvent(UpdateViewModel update)
         {
             var friends = await _friensRepo.GetFriendIdsAsync(update.UserId);
+
             foreach (var friend in friends.Prepend(update.UserId))
             {
                 if (_cache.TryGetValue<Deque<UpdateViewModel>>(friend, out var updates))

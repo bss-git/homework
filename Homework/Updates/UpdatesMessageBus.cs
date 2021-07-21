@@ -1,11 +1,12 @@
 ﻿using Homework.Updates.Dto;
+using Homework.Updates.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Homework.Updates.SignalR
+namespace Homework.Updates
 {
     public class UpdatesMessageBus
     {

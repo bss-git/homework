@@ -1,6 +1,6 @@
 ﻿using Homework.Updates.Dto;
 
-namespace Homework.Updates.SignalR
+namespace Homework.Updates
 {
     public interface IUpdatesSubscriber
     {

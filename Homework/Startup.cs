@@ -74,6 +74,7 @@ namespace Homework
             services.AddSingleton<MySqlUpdatesRepository>();
             services.AddSingleton<IUpdatesRepository, UpdatesRepositoryCachingProxy>();
             services.AddSingleton<UpdatesMessageBus>();
+            services.AddSingleton<UpdatesHubEventPublisher>();
 
             services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
             services.AddSingleton<DialogsShardSelector>();
