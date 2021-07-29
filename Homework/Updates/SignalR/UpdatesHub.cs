@@ -15,8 +15,23 @@ namespace Homework.Updates.SignalR
     [Authorize]
     public class UpdatesHub : Hub
     {
-        public UpdatesHub(UpdatesHubEventPublisher publisher)
+        private readonly UpdatesMessageBus _messageBus;
+
+        public UpdatesHub(UpdatesHubEventPublisher publisher, UpdatesMessageBus messageBus)
         {
+            _messageBus = messageBus;
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            _messageBus.SubscribeRecipient(Context.User.Id().ToString());
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            _messageBus.UnSubscribeRecipient(Context.User.Id().ToString());
+            return base.OnDisconnectedAsync(exception);
         }
     }
 }

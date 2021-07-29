@@ -6,6 +6,7 @@ using Homework.Auth;
 using Homework.Dialogs.Application;
 using Homework.Dialogs.Persistense;
 using Homework.Events;
+using Homework.Events.RabbitMQ;
 using Homework.Friends;
 using Homework.Persistence;
 using Homework.Persistence.Tarantool;
@@ -68,6 +69,9 @@ namespace Homework
             
             services.AddMemoryCache();
 
+
+            services.AddOptions<RabbitOptions>().Bind(Configuration.GetSection("RabbitMQ"));
+            services.AddSingleton<RabbitChannelFactory>();
             services.AddOptions<KafkaOptions>().Bind(Configuration.GetSection("Kafka"));
             services.AddSingleton<KafkaProducer>();
             services.AddSingleton<KafkaConsumer>();

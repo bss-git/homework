@@ -1,13 +1,17 @@
 ﻿using Homework.Events;
+using Homework.Events.RabbitMQ;
 using Homework.Friends;
 using Homework.Friends.Dto;
 using Homework.Persistence;
 using Homework.Updates.Dto;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Nito.Collections;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -33,6 +37,7 @@ namespace Homework.Updates
             _kafkaConsumer = kafkaConsumer;
             _kafkaProducer = kafkaProducer;
             _messageBus = messageBus;
+
             Task.Run(CacheUpdateTask);
             Task.Run(() => _kafkaConsumer.ConsumeAsync<UpdateViewModel>("updates",
                 update => _changesQueue.Writer.WriteAsync(update), CancellationToken.None));

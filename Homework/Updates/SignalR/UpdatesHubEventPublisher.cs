@@ -15,7 +15,7 @@ namespace Homework.Updates.SignalR
         private IHubContext<UpdatesHub> _hubContext;
         private readonly ILogger<UpdatesHubEventPublisher> _logger;
 
-        public UpdatesHubEventPublisher(IHubContext<UpdatesHub> hubContext,UpdatesMessageBus eventBus, ILogger<UpdatesHubEventPublisher> logger)
+        public UpdatesHubEventPublisher(IHubContext<UpdatesHub> hubContext, UpdatesMessageBus eventBus, ILogger<UpdatesHubEventPublisher> logger)
         {
             _hubContext = hubContext;
             _logger = logger;
