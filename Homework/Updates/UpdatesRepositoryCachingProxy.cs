@@ -78,7 +78,7 @@ namespace Homework.Updates
 
             _cache.Set(userId, new Deque<UpdateViewModel>(result), new MemoryCacheEntryOptions
             {
-                SlidingExpiration = TimeSpan.FromMinutes(30)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             });
 
             return result;
