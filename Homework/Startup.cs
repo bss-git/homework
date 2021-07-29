@@ -76,7 +76,8 @@ namespace Homework
             services.AddSingleton<KafkaProducer>();
             services.AddSingleton<KafkaConsumer>();
             services.AddSingleton<MySqlUpdatesRepository>();
-            services.AddSingleton<IUpdatesRepository, UpdatesRepositoryCachingProxy>();
+            services.AddSingleton<UpdatesRepositoryCachingProxy>();
+            services.AddSingleton<IUpdatesRepository, UpdateMessageDispatchingDecorator>();
             services.AddSingleton<UpdatesMessageBus>();
             services.AddSingleton<UpdatesHubEventPublisher>();
 

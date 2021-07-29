@@ -18,15 +18,5 @@ $(document).ready(async function (e) {
             return
         }
         $('#message-input').val('')
-        var update = await response.json()
-        $('.list-group').prepend(
-        `<div class="list-group-item flex-column align-items-start" >
-            <div class= "d-flex w-100 justify-content-between" >
-                <h5 class="mb-1">${update.username}</h5>
-                <small>${update.timestamp}</small>
-            </div >
-            <p class="mb-1">${message}</p>
-        </div >`)
-
     })
 })

@@ -34,7 +34,7 @@ namespace Homework.Updates
 
             await _repo.SaveAsync(update);
 
-            return new JsonResult(new { username = update.UserName, timestamp = update.Timestamp.ToString() });
+            return Ok();
         }
     }
 }

@@ -25,18 +25,16 @@ namespace Homework.Updates
         private IMemoryCache _cache;
         private KafkaConsumer _kafkaConsumer;
         private KafkaProducer _kafkaProducer;
-        private readonly UpdatesMessageBus _messageBus;
         private Channel<object> _changesQueue = Channel.CreateUnbounded<object>();
 
         public UpdatesRepositoryCachingProxy(MySqlUpdatesRepository repository, IFriendLinkRepository friensRepo,
-            IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer, UpdatesMessageBus messageBus)
+            IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer)
         {
             _repo = repository;
             _friensRepo = friensRepo;
             _cache = cache;
             _kafkaConsumer = kafkaConsumer;
             _kafkaProducer = kafkaProducer;
-            _messageBus = messageBus;
 
             Task.Run(CacheUpdateTask);
             Task.Run(() => _kafkaConsumer.ConsumeAsync<UpdateViewModel>("updates",
@@ -57,13 +55,6 @@ namespace Homework.Updates
         {
             await _repo.SaveAsync(update);
             _ = _kafkaProducer.ProduceAsync("updates", update);
-                        
-            var friends = await _friensRepo.GetFriendIdsAsync(update.UserId);
-
-            foreach (var friend in friends.Prepend(update.UserId))
-            {
-                _messageBus.Publish(new UpdateMessage { Recepient = friend, Update = update });
-            }
         }
 
         private async Task CacheUpdateTask()

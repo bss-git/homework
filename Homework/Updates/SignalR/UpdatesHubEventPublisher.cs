@@ -34,7 +34,9 @@ namespace Homework.Updates.SignalR
             {
                 try
                 {
-                    await _hubContext.Clients.User(updateMessage.Recepient.ToString()).SendAsync("NewUpdate", updateMessage.Update);
+                    var update = updateMessage.Update;
+                    var dto = new { username = update.UserName, timestamp = update.Timestamp.ToString(), Message = update.Message };
+                    await _hubContext.Clients.User(updateMessage.Recepient.ToString()).SendAsync("NewUpdate", dto);
                 }
                 catch (Exception ex)
                 {
