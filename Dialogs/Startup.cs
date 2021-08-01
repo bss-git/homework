@@ -43,6 +43,7 @@ namespace Dialogs
                             ValidateIssuerSigningKey = true,
                         };
                     });
+
             services.AddControllers();
 
             services.AddSingleton<MySqlDb>();
@@ -61,6 +62,10 @@ namespace Dialogs
             }
 
             app.UseRouting();
+
+            app.UseCors(builder => builder.WithOrigins("http://kany.ga", "http://localhost:5000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod());
 
             app.UseAuthentication();
             app.UseAuthorization();

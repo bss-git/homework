@@ -1,4 +1,6 @@
-﻿window.onload = () => {
+﻿var token
+
+window.onload = () => {
     let sendButton = document.getElementById('send_button')
     let textInput = document.getElementById('send_text')
 
@@ -36,7 +38,7 @@
     }
 }
 
-var messagesUpdateInterval;
+var messagesUpdateInterval
 
 async function startMessageUpdating(userId) {
     clearInterval(messagesUpdateInterval)
@@ -50,8 +52,20 @@ async function startMessageUpdating(userId) {
     messagesUpdateInterval = setInterval(() => { loadMessages(userId) }, 3000)
 
     async function loadMessages(userId) {
-        let response = await fetch(`/api/dialogs/${userId}`, {
-            method: 'GET'
+        if (!token) {
+            let response = await fetch(`/auth/jwt`, {
+                method: 'GET'
+            })
+
+            token = `Bearer ${await response.text()}`
+        }
+
+
+        let response = await fetch(`http://${window.location.hostname}:5001/api/dialogs/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            }
         });
 
         if (response.ok) {
@@ -71,10 +85,11 @@ async function startMessageUpdating(userId) {
 async function sendMessage(recipient, textInput, sendButton) {
     sendButton.disabled = true
     let text = textInput.value
-    let response = await fetch('/api/dialogs/message', {
+    let response = await fetch('http://${window.location.hostname}:5001/api/dialogs/message', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': token
         },
         body: JSON.stringify({ to: recipient, text: text })
     });
