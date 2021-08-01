@@ -12,6 +12,7 @@ namespace Dialogs.Application
 {
     [Route("api/dialogs")]
     [ApiController]
+    [Authorize]
     public class DialogsApiController : ControllerBase
     {
         private readonly IDialogsRepository _dialogsRepository;

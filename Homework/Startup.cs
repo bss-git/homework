@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Homework.Auth;
+using Homework.Dialogs;
 using Homework.Dialogs.Application;
-using Homework.Dialogs.Persistense;
 using Homework.Events;
 using Homework.Events.RabbitMQ;
 using Homework.Friends;
@@ -81,9 +81,8 @@ namespace Homework
             services.AddSingleton<UpdatesMessageBus>();
             services.AddSingleton<UpdatesHubEventPublisher>();
 
-            services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
-            services.AddSingleton<DialogsShardSelector>();
-            services.AddSingleton<IDialogsRepository, MySqlDialogsRepository>();
+            services.AddOptions<DialogsOptions>().Bind(Configuration.GetSection("Dialogs"));
+            services.AddHttpClient<IDialogsRepository, ServiceDialogsRepository>();
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 

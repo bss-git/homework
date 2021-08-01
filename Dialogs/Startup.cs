@@ -36,12 +36,13 @@ namespace Dialogs
                         options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
+                            ValidateAudience = false,
+                            ValidateIssuer = false,
                             ValidateLifetime = true,
                             IssuerSigningKey = JwtAuthOptions.Key,
-                            ValidateIssuerSigningKey = true
+                            ValidateIssuerSigningKey = true,
                         };
                     });
-
             services.AddControllers();
 
             services.AddSingleton<MySqlDb>();

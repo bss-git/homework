@@ -26,7 +26,7 @@ services:
       - dialogs-db1
       - dialogs-db2
     ports:
-      - "81:80"
+      - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
 

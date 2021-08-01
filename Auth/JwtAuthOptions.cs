@@ -6,7 +6,7 @@ namespace Auth
 {
     public static class JwtAuthOptions
     {
-        private const string _secret = "secret";
+        private const string _secret = "secret1337secret1337secret1337";
 
         internal static TimeSpan Ttl = TimeSpan.FromHours(10);
 

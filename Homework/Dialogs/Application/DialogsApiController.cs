@@ -14,6 +14,7 @@ namespace Homework.Dialogs.Application
     [Route("api/dialogs")]
     [ApiController]
     [Authorize]
+    [Obsolete("Нужен для обратной совместимости старых клиентов. Удалить после перехода клиентов на апи сервиса диалогов.")]
     public class DialogsApiController : ControllerBase
     {
         private readonly IDialogsRepository _dialogsRepository;
@@ -36,10 +37,9 @@ namespace Homework.Dialogs.Application
         public async Task<IActionResult> GetMessages(Guid interlocutorId)
         {
             var userId = User.Id();
-            var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId))
-                .Select(x => new MessageClientDto(x, x.From == userId));
+            var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId));
 
-            return new JsonResult(messages);
+            return Ok(messages);
         }
     }
 }

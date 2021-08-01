@@ -9,6 +9,6 @@ namespace Homework.Dialogs.Application
     {
         Task SaveAsync(Message message);
 
-        Task<IEnumerable<Message>> GetListAsync(Guid user1, Guid user2);
+        Task<string> GetListAsync(Guid user1, Guid user2);
     }
 }
