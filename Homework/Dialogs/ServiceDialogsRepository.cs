@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using Tracing;
 
 namespace Homework.Dialogs
 {
@@ -31,6 +32,9 @@ namespace Homework.Dialogs
             var path = $"/api/dialogs/{user2}";
             var request = new HttpRequestMessage(HttpMethod.Get, _baseUri + path);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", JwtProvider.GetToken("", user1));
+            
+            request.InjectTracing();
+
             var response = await _httpClient.SendAsync(request);
 
             return await response.Content.ReadAsStringAsync();
@@ -44,6 +48,8 @@ namespace Homework.Dialogs
 
             var body = JsonConvert.SerializeObject(new { To = message.To, Text = message.Text });
             request.Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+
+            request.InjectTracing();
 
             return _httpClient.SendAsync(request);
         }

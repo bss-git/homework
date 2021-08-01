@@ -177,6 +177,15 @@ services:
       - 5672:5672
       - 15672:15672
 
+  jaeger:
+    container_name: jaeger
+    hostname: jaeger
+    restart: "always"
+    image: jaegertracing/all-in-one
+    ports:
+      - 6831:6831
+      - 16686:16686
+
   #dialogs-db3:
   #  container_name: dialogs-db3
   #  hostname: dialogs-db3

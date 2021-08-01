@@ -23,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Tracing;
 
 namespace Homework
 {
@@ -86,6 +87,7 @@ namespace Homework
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 
+            services.AddJaegerTracing(Configuration.GetValue<JaegerConfig>("Jaeger"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +110,8 @@ namespace Homework
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestTracingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tracing;
 
 namespace Dialogs
 {
@@ -51,6 +52,8 @@ namespace Dialogs
             services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
             services.AddSingleton<DialogsShardSelector>();
             services.AddSingleton<IDialogsRepository, MySqlDialogsRepository>();
+
+            services.AddJaegerTracing(Configuration.GetValue<JaegerConfig>("Jaeger"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +72,8 @@ namespace Dialogs
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestTracingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

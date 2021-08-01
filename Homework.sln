@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dialogs", "Dialogs\Dialogs.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{D34EB434-35C9-4142-AE4C-4A42B6E689D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing", "Tracing\Tracing.csproj", "{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D34EB434-35C9-4142-AE4C-4A42B6E689D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D34EB434-35C9-4142-AE4C-4A42B6E689D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D34EB434-35C9-4142-AE4C-4A42B6E689D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
