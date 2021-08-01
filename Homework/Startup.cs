@@ -87,7 +87,7 @@ namespace Homework
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 
-            services.AddJaegerTracing(Configuration.GetValue<JaegerConfig>("Jaeger"));
+            services.AddJaegerTracing(Configuration.GetSection("Jaeger").Get<JaegerConfig>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
