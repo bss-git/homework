@@ -26,5 +26,12 @@ namespace Homework.Dialogs.Application
             var friends = await _userRepository.GetFriendsAsync(User.Id());
             return View(friends);
         }
+
+        [HttpGet("old")]
+        public async Task<IActionResult> Old()
+        {
+            var friends = await _userRepository.GetFriendsAsync(User.Id());
+            return View("index_old", friends);
+        }
     }
 }

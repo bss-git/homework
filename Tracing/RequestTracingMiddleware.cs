@@ -23,7 +23,10 @@ namespace Tracing
 
         public async Task Invoke(HttpContext httpContext)
         {
-            await DoTraceAsync(httpContext);
+            if (httpContext.Request.Path.ToString().Contains("auth", StringComparison.OrdinalIgnoreCase))
+                await _next(httpContext);
+            else
+                await DoTraceAsync(httpContext);
         }
 
         private async Task DoTraceAsync(HttpContext httpContext)
