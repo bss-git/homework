@@ -9,6 +9,7 @@ using Homework.Models;
 using Homework.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Homework.Auth;
+using Auth;
 
 namespace Homework.Controllers
 {   

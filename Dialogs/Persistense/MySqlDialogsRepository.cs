@@ -1,17 +1,15 @@
-﻿using Homework.Users;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
-using Homework.Friends;
-using Homework.Persistence;
-using Homework.Dialogs.Application;
-using Homework.Dialogs.Application.Dto;
+using Dialogs.Application;
+using Dialogs.Application.Dto;
 using Microsoft.Extensions.Logging;
+using Dialogs.Persistence.Mysql;
 
-namespace Homework.Dialogs.Persistense
+namespace Dialogs.Persistence
 {
     public class MySqlDialogsRepository : IDialogsRepository
     {

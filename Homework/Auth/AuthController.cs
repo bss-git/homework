@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Auth;
 using Homework.Auth.Dto;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace Homework.Auth
 {
@@ -88,14 +91,18 @@ namespace Homework.Auth
 
         private async Task Authenticate(Guid userId, string login)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, login),
-                new Claim("Id", userId.ToString())
-            };
+            var claims = ClaimsProvider.GetClaims(login, userId);
+
             var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        }
+
+        [HttpGet("jwt")]
+        [Authorize]
+        public IActionResult GetJwt()
+        {
+            return Ok(JwtProvider.GetToken(User.Login(), User.Id()));
         }
 
         [HttpPost("logout")]

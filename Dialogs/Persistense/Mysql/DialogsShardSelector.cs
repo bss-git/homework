@@ -1,11 +1,11 @@
-﻿using Homework.Dialogs.Application.Dto;
+﻿using Dialogs.Application.Dto;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Homework.Dialogs.Persistense
+namespace Dialogs.Persistence.Mysql
 {
     public class DialogsShardSelector
     {

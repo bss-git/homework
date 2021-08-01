@@ -1,6 +1,5 @@
 ﻿using Auth;
-using Homework.Auth;
-using Homework.Dialogs.Application.Dto;
+using Dialogs.Application.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Homework.Dialogs.Application
+namespace Dialogs.Application
 {
     [Route("api/dialogs")]
     [ApiController]
-    [Authorize]
     public class DialogsApiController : ControllerBase
     {
         private readonly IDialogsRepository _dialogsRepository;
