@@ -8,7 +8,9 @@ using Homework.Auth.Dto;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -91,11 +93,8 @@ namespace Homework.Auth
 
         private async Task Authenticate(Guid userId, string login)
         {
-            var claims = ClaimsProvider.GetClaims(login, userId);
-
-            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+            var token = JwtProvider.GetToken(login, userId);
+            HttpContext.Response.Cookies.Append("beareridentity", token, new CookieOptions { HttpOnly = true });
         }
 
         [HttpGet("jwt")]
@@ -108,7 +107,7 @@ namespace Homework.Auth
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Response.Cookies.Delete("beareridentity");
             return RedirectToAction("login", "auth");
         }
     }
