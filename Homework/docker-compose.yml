@@ -177,6 +177,16 @@ services:
       - 5672:5672
       - 15672:15672
 
+  haproxy:
+    container_name: haproxy
+    hostname: haproxy
+    restart: "always"
+    image: haproxy
+    ports:
+      - 8404:8404
+    volumes:
+      - ./compose/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+
   #jaeger:
   #  container_name: jaeger
   #  hostname: jaeger
