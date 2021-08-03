@@ -2,6 +2,8 @@ version: '3.1'
 
 services:
   web:
+    container_name: web
+    hostname: web
     build:
       dockerfile: Homework/Dockerfile
       context: ..
@@ -12,12 +14,32 @@ services:
       - kafka
       - dialogs-db1
       - dialogs-db2
-    ports:
-      - "80:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
+    ports:
+      - 80:80
+
+  #web2:
+  #  container_name: web2
+  #  hostname: web2
+  #  build:
+  #    dockerfile: Homework/Dockerfile
+  #    context: ..
+  #  restart: "always"
+  #  depends_on:
+  #    - mysql
+  #    - tarantool
+  #    - kafka
+  #    - dialogs-db1
+  #    - dialogs-db2
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Compose
+  #  ports:
+  #    - 82:80
 
   dialogs:
+    container_name: dialogs
+    hostname: dialogs
     build:
       dockerfile: Dialogs/Dockerfile
       context: ..
@@ -186,6 +208,24 @@ services:
       - 8404:8404
     volumes:
       - ./compose/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+
+  #nginx:
+  #  container_name: nginx
+  #  hostname: nginx
+  #  restart: "always"
+  #  image: nginx
+  #  ports:
+  #    - 80:80
+  #  volumes:
+  #    - ./compose/nginx.conf:/etc/nginx/nginx.conf
+
+  #redis:
+  #  container_name: redis
+  #  hostname: redis
+  #  restart: "always"
+  #  image: redis
+  #  ports:
+  #    - 6379:6379
 
   #jaeger:
   #  container_name: jaeger

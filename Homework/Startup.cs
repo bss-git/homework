@@ -64,7 +64,8 @@ namespace Homework
                 };
             });
 
-            services.AddSignalR();
+            var redis = Configuration.GetSection("Redis").Get<RedisConfig>();
+            services.AddSignalR();//.AddStackExchangeRedis($"{redis.Host}:{redis.Port}");
 
             services.AddControllersWithViews();
 
