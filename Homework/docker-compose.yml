@@ -47,24 +47,24 @@ services:
     ports:
       - "3306:3306"
 
-  #mysql-slave1:
-  #  depends_on:
-  #    - mysql
-  #  container_name: mysql-slave1
-  #  hostname: mysql-slave1
-  #  image: mysql
-  #  command: --default-authentication-plugin=mysql_native_password
-  #  cap_add:
-  #    - SYS_NICE
-  #  restart: "no"
-  #  environment:
-  #    MYSQL_ROOT_PASSWORD: example
-  #  volumes:
-  #    - homework_data_slave1:/var/lib/mysql
-  #    - ./compose/slave1.cnf:/etc/mysql/conf.d/mysql.cnf
-  #    - ./compose/slave.sql:/docker-entrypoint-initdb.d/start.sql
-  #  ports:
-  #    - "3307:3306"
+  mysql-slave1:
+    depends_on:
+      - mysql
+    container_name: mysql-slave1
+    hostname: mysql-slave1
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
+    restart: "always"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - homework_data_slave1:/var/lib/mysql
+      - ./compose/slave1.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ./compose/slave.sql:/docker-entrypoint-initdb.d/start.sql
+    ports:
+      - "3307:3306"
 
   mysql-slave2:
     depends_on:
@@ -177,15 +177,15 @@ services:
       - 5672:5672
       - 15672:15672
 
-  jaeger:
-    container_name: jaeger
-    hostname: jaeger
-    restart: "always"
-    image: jaegertracing/all-in-one
-    ports:
-      - 6831:6831
-      - 16686:16686
-    command: --memory.max-traces=1000
+  #jaeger:
+  #  container_name: jaeger
+  #  hostname: jaeger
+  #  restart: "always"
+  #  image: jaegertracing/all-in-one
+  #  ports:
+  #    - 6831:6831
+  #    - 16686:16686
+  #  command: --memory.max-traces=1000
 
   #dialogs-db3:
   #  container_name: dialogs-db3
