@@ -65,7 +65,10 @@ namespace Homework
             });
 
             var redis = Configuration.GetSection("Redis").Get<RedisConfig>();
-            services.AddSignalR();//.AddStackExchangeRedis($"{redis.Host}:{redis.Port}");
+            services.AddSignalR().AddStackExchangeRedis($"{redis.Host}:{redis.Port}", options =>
+            {
+                options.Configuration.ChannelPrefix = "updatesHub";
+            });
 
             services.AddControllersWithViews();
 
