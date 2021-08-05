@@ -14,10 +14,10 @@ namespace Homework.Updates
         private readonly UpdatesMessageBus _messageBus;
 
         private readonly IFriendLinkRepository _friensRepo;
-        private readonly KafkaProducer<Guid> _kafkaProducer;
+        private readonly KafkaProducer<string> _kafkaProducer;
         private readonly IUpdatesRepository _decorated;
 
-        public UpdateMessageDispatchingDecorator(UpdatesRepositoryCachingProxy decorated, UpdatesMessageBus messageBus, IFriendLinkRepository friensRepo, KafkaProducer<Guid> kafkaProducer)
+        public UpdateMessageDispatchingDecorator(UpdatesRepositoryCachingProxy decorated, UpdatesMessageBus messageBus, IFriendLinkRepository friensRepo, KafkaProducer<string> kafkaProducer)
         {
             _messageBus = messageBus;
             _friensRepo = friensRepo;
@@ -28,7 +28,7 @@ namespace Homework.Updates
         public async Task<IEnumerable<UpdateViewModel>> GetListAsync(Guid userId)
         {
             var result =  await _decorated.GetListAsync(userId);
-            _ = _kafkaProducer.ProduceAsync("user_update", Guid.NewGuid(), new UserCounterEvent { UserId = userId, EventType = EventType.UserRead }); ;
+            _ = _kafkaProducer.ProduceAsync("user_update", Guid.NewGuid().ToString(), new UserCounterEvent { UserId = userId, EventType = EventType.UserRead }); ;
 
             return result;
         }
@@ -42,7 +42,7 @@ namespace Homework.Updates
             foreach (var friend in friends.Prepend(update.UserId))
             {
                 _messageBus.Publish(new UpdateMessage { Recepient = friend, Update = update });
-                _ = _kafkaProducer.ProduceAsync("user_update", Guid.NewGuid(), new UserCounterEvent { UserId = friend, EventType = EventType.NewMessage });
+                _ = _kafkaProducer.ProduceAsync("user_update", Guid.NewGuid().ToString(), new UserCounterEvent { UserId = friend, EventType = EventType.NewMessage });
             }
         }
     }

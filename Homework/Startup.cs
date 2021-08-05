@@ -94,7 +94,7 @@ namespace Homework
             
             services.AddMemoryCache();
 
-            services.AddSingleton<KafkaProducer<Guid>>();
+            services.AddSingleton<KafkaProducer<string>>();
 
             services.AddOptions<RabbitOptions>().Bind(Configuration.GetSection("RabbitMQ"));
             services.AddSingleton<RabbitChannelFactory>();

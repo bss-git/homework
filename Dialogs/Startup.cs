@@ -52,7 +52,7 @@ namespace Dialogs
             services.AddSingleton<MySqlDb>();
 
             services.AddOptions<KafkaOptions>().Bind(Configuration.GetSection("Kafka"));
-            services.AddSingleton<KafkaProducer<Guid>>();
+            services.AddSingleton<KafkaProducer<string>>();
 
             services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
             services.AddSingleton<DialogsShardSelector>();

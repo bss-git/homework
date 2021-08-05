@@ -17,11 +17,11 @@ namespace UserCounters.IncomingEvents.Handlers
             _redisDb = redisDb;
         }
 
-        public async Task Handle(ConsumeResult<Guid, string> consumeResult)
+        public async Task Handle(ConsumeResult<string, string> consumeResult)
         {
             var db = _redisDb.GetDatabase();
 
-            var isHandled = await db.SetContainsAsync("updates:handled", consumeResult.Message.Key.ToString());
+            var isHandled = await db.SetContainsAsync("updates:handled", consumeResult.Message.Key);
             if (isHandled)
                 return;
             
@@ -34,6 +34,6 @@ namespace UserCounters.IncomingEvents.Handlers
             await tran.ExecuteAsync();
         }
 
-        protected abstract Task HandleInner(ConsumeResult<Guid, string> consumeResult, ITransaction redisTran);
+        protected abstract Task HandleInner(ConsumeResult<string, string> consumeResult, ITransaction redisTran);
     }
 }

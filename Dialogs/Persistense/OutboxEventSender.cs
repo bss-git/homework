@@ -14,9 +14,9 @@ namespace Dialogs.Persistense
     {
         private readonly MySqlDb _mySqlDb;
         private readonly DialogsShardSelector _shardSelector;
-        private readonly KafkaProducer<Guid> _kafkaProducer;
+        private readonly KafkaProducer<string> _kafkaProducer;
 
-        public OutboxEventSender(MySqlDb mySqlDb, DialogsShardSelector shardSelector, KafkaProducer<Guid> kafkaProducer)
+        public OutboxEventSender(MySqlDb mySqlDb, DialogsShardSelector shardSelector, KafkaProducer<string> kafkaProducer)
         {
             _mySqlDb = mySqlDb;
             _shardSelector = shardSelector;
@@ -53,11 +53,13 @@ namespace Dialogs.Persistense
                         var outbox = await _mySqlDb.GetListAsync(connectionString, "Get_Outbox", FromReader);
                         foreach (var message in outbox)
                         {
-                            _ = _kafkaProducer.ProduceAsync(message.Topic, Guid.Parse(message.Key), message.Value)
+                            _ = _kafkaProducer.ProduceAsync(message.Topic, message.Key, message.Value)
                                 .ContinueWith(async t =>
                                 {
                                     if (t.Status == TaskStatus.RanToCompletion)
                                         await _mySqlDb.ExecuteTextAsync(connectionString, $"DELETE FROM Outbox WHERE Id='{message.Id}'");
+                                    else
+                                        Console.WriteLine(t.Exception);
                                 });
                         }
 

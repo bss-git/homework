@@ -16,7 +16,7 @@ namespace UserCounters.IncomingEvents.Handlers
     {
         public UpdatesEventHandler(RedisDb redisDb) : base(redisDb) { }
 
-        protected override async Task HandleInner(ConsumeResult<Guid, string> consumeResult, ITransaction redisTran)
+        protected override async Task HandleInner(ConsumeResult<string, string> consumeResult, ITransaction redisTran)
         {
             var counterEvent = JsonConvert.DeserializeObject<UserCounterEvent>(consumeResult.Message.Value);
             if (counterEvent.EventType == EventType.NewMessage)

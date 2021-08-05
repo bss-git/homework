@@ -32,7 +32,7 @@ namespace UserCounters.IncomingEvents
                 EnableAutoOffsetStore = false
             };
 
-            using var c = new ConsumerBuilder<Guid, string>(config).Build();
+            using var c = new ConsumerBuilder<string, string>(config).Build();
             c.Subscribe(new[] { "user_dialog", "user_update" });
 
             try
@@ -49,6 +49,7 @@ namespace UserCounters.IncomingEvents
                     }
                     catch (ConsumeException e)
                     {
+                        Console.WriteLine(e);
                         Console.WriteLine($"Error occured: {e.Error.Reason}");
                     }
                 }

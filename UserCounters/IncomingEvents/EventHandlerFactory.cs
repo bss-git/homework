@@ -14,7 +14,7 @@ namespace UserCounters.IncomingEvents
             _redisDb = redisDb;
         }
 
-        public IncomingEventHandler GetHandler(ConsumeResult<Guid, string> cosumeResult)
+        public IncomingEventHandler GetHandler(ConsumeResult<string, string> cosumeResult)
         {
             if (cosumeResult.Topic == "user_dialog")
                 return new DialogsEventHandler(_redisDb);

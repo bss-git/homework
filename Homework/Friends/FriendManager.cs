@@ -1,4 +1,5 @@
-﻿using Homework.Events;
+﻿using Confluent.Kafka;
+using Homework.Events;
 using Homework.Friends.Dto;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace Homework.Friends
     {
         private IFriendOfferRepository _offerRepository;
         private IFriendLinkRepository _friendLinkRepository;
-        private readonly KafkaProducer _kafkaProducer;
+        private readonly KafkaProducer<Null> _kafkaProducer;
 
-        public FriendManager(IFriendOfferRepository offerRepository, IFriendLinkRepository friendLinkRepository, KafkaProducer kafkaProducer)
+        public FriendManager(IFriendOfferRepository offerRepository, IFriendLinkRepository friendLinkRepository, KafkaProducer<Null> kafkaProducer)
         {
             _offerRepository = offerRepository;
             _friendLinkRepository = friendLinkRepository;

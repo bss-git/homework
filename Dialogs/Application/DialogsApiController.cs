@@ -18,9 +18,9 @@ namespace Dialogs.Application
     public class DialogsApiController : ControllerBase
     {
         private readonly IDialogsRepository _dialogsRepository;
-        private readonly KafkaProducer<Guid> _kafkaProducer;
+        private readonly KafkaProducer<string> _kafkaProducer;
 
-        public DialogsApiController(IDialogsRepository dialogsRepository, KafkaProducer<Guid> kafkaProducer)
+        public DialogsApiController(IDialogsRepository dialogsRepository, KafkaProducer<string> kafkaProducer)
         {
             _dialogsRepository = dialogsRepository;
             _kafkaProducer = kafkaProducer;
@@ -42,7 +42,7 @@ namespace Dialogs.Application
             var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId))
                 .Select(x => new MessageClientDto(x, x.From == userId));
 
-            _ = _kafkaProducer.ProduceAsync("user_dialog", Guid.NewGuid(), new UserCounterEvent { UserId = userId, EventType = EventType.UserRead });
+            _ = _kafkaProducer.ProduceAsync("user_dialog", Guid.NewGuid().ToString(), new UserCounterEvent { UserId = userId, EventType = EventType.UserRead });
 
             return new JsonResult(messages);
         }

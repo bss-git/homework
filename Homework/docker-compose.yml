@@ -52,19 +52,19 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
 
-  #usercounters:
-  #  container_name: usercounters
-  #  hostname: usercounters
-  #  build:
-  #    dockerfile: UserCounters/Dockerfile
-  #    context: ..
-  #  restart: "always"
-  #  depends_on:
-  #    - redis
-  #  ports:
-  #    - "5002:5002"
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Compose
+  usercounters:
+    container_name: usercounters
+    hostname: usercounters
+    build:
+      dockerfile: UserCounters/Dockerfile
+      context: ..
+    restart: "always"
+    depends_on:
+      - redis
+    ports:
+      - "5002:5002"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
 
   mysql:
     container_name: mysql
@@ -156,8 +156,9 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092
-      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://:19092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     volumes:
     - kafka:/bitnami/kafka
     ports:

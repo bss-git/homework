@@ -9,11 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserCounters.IncomingEvents;
 using UserCounters.Persistence;
 using UserCounters.Persistence.Kafka;
 using UserCounters.Persistense.Redis;
 using UserCounters.UserCounters;
-using UserCounters.UserCounters.IncomingEvents;
 
 namespace UserCounters
 {
@@ -33,6 +33,8 @@ namespace UserCounters
 
             services.AddOptions<RedisOptions>().Bind(Configuration.GetSection("Redis"));
             services.AddOptions<KafkaOptions>().Bind(Configuration.GetSection("Kafka"));
+            services.AddSingleton<EventHandlerFactory>();
+            services.AddSingleton<RedisDb>();
 
             services.AddHostedService<EventHandlingService>();
         }
