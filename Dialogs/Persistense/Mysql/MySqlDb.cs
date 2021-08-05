@@ -110,6 +110,8 @@ namespace Dialogs.Persistence.Mysql
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.CommandText = text;
 
+                await conn.OpenAsync();
+
                 await cmd.ExecuteNonQueryAsync();
             }
             catch (Exception ex)

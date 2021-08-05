@@ -33,7 +33,20 @@ namespace UserCounters.IncomingEvents
             };
 
             using var c = new ConsumerBuilder<string, string>(config).Build();
-            c.Subscribe(new[] { "user_dialog", "user_update" });
+            
+            while (true)
+            {
+                try
+                {
+                    c.Subscribe(new[] { "user_dialog", "user_update" });
+                    break;
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                    await Task.Delay(1000);
+                }
+            }
 
             try
             {

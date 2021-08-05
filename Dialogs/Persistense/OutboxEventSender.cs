@@ -69,6 +69,7 @@ namespace Dialogs.Persistense
                     catch (Exception e)
                     {
                         Console.WriteLine($"Error occured: {e}");
+                        await Task.Delay(1000);
                     }
                 }
             }

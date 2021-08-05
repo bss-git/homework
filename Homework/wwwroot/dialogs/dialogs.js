@@ -49,7 +49,7 @@ async function startMessageUpdating(userId) {
         alert('Не удалось загрузить данные')
     }
 
-    messagesUpdateInterval = setInterval(() => { loadMessages(userId) }, 3000)
+    //messagesUpdateInterval = setInterval(() => { loadMessages(userId) }, 3000)
 
     async function loadMessages(userId) {
         if (!token) {

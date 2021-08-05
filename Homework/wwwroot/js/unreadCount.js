@@ -1,5 +1,5 @@
 ﻿window.onload = async () => {
-    let userId = $('#user-status').data('userId')
+    let userId = $('#user-id').data('userId')
 
     let response = await fetch(`http://${window.location.hostname}:5002/api/counters/${userId}`, {
         method: 'GET'

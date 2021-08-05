@@ -47,11 +47,11 @@ namespace UserCounters
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
+
             app.UseCors(builder => builder.WithOrigins("http://kany.ga", "http://localhost:5000")
                 .AllowAnyHeader()
                 .AllowAnyMethod());
-
-            app.UseRouting();
 
             app.UseAuthorization();
 
