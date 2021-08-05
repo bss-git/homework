@@ -68,7 +68,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Auth\Auth.csproj" />
+    <ProjectReference Include="..\SharedDto\SharedDto.csproj" />
     <ProjectReference Include="..\Tracing\Tracing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="compose\userCounters\" />
   </ItemGroup>
 
 

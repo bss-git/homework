@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth", "Auth\Auth.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing", "Tracing\Tracing.csproj", "{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserCounters", "UserCounters\UserCounters.csproj", "{AFC3F554-13AD-459E-848D-8F0A68B82814}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserCounters", "UserCounters\UserCounters.csproj", "{AFC3F554-13AD-459E-848D-8F0A68B82814}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedDto", "SharedDto\SharedDto.csproj", "{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

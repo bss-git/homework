@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Homework.Events
+namespace Dialogs.Persistence.Kafka
 {
     public class KafkaProducer<TKey>
     {
@@ -18,14 +18,14 @@ namespace Homework.Events
             _producer = new ProducerBuilder<TKey, string>(config).Build();
         }
 
-        public Task ProduceAsync(string topic, object data)
-        {
-            return _producer.ProduceAsync(topic, new Message<TKey, string> { Value = JsonConvert.SerializeObject(data) });
-        }
-
         public Task ProduceAsync(string topic, TKey key, object data)
         {
             return _producer.ProduceAsync(topic, new Message<TKey, string> { Key = key, Value = JsonConvert.SerializeObject(data) });
+        }
+
+        public Task ProduceAsync(string topic, TKey key, string data)
+        {
+            return _producer.ProduceAsync(topic, new Message<TKey, string> { Key = key, Value = data });
         }
     }
 }

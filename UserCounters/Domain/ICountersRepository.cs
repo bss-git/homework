@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace UserCounters.UserCounters
+namespace UserCounters.Domain
 {
     public interface ICountersRepository
     {

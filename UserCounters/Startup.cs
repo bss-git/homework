@@ -13,6 +13,7 @@ using UserCounters.Persistence;
 using UserCounters.Persistence.Kafka;
 using UserCounters.Persistense.Redis;
 using UserCounters.UserCounters;
+using UserCounters.UserCounters.IncomingEvents;
 
 namespace UserCounters
 {

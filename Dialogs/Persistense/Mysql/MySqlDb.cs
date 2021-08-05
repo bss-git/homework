@@ -76,5 +76,87 @@ namespace Dialogs.Persistence.Mysql
                 throw;
             }
         }
+
+
+        public async Task ExecuteNonQueryAsync(MySqlConnection conn, MySqlTransaction tran, string procedureName, params MySqlParameter[] parameters)
+        {
+            try
+            {
+                var cmd = conn.CreateCommand();
+                cmd.Transaction = tran;
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = procedureName;
+
+                foreach (var param in parameters)
+                {
+                    cmd.Parameters.Add(param);
+                }
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task ExecuteTextAsync(string connectionString, string text)
+        {
+            try
+            {
+                await using var conn = new MySqlConnection(connectionString);
+                var cmd = conn.CreateCommand();
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = text;
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task ExecuteTextAsync(MySqlConnection conn, MySqlTransaction tran, string text)
+        {
+            try
+            {
+                var cmd = conn.CreateCommand();
+                cmd.Transaction = tran;
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = text;
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task ExecuteTranAsync(string connectionString, Func<MySqlConnection, MySqlTransaction, Task> commands)
+        {
+            MySqlTransaction tran = null;
+
+            try
+            {
+                using var conn = new MySqlConnection(connectionString);
+                await conn.OpenAsync();
+                tran = await conn.BeginTransactionAsync();
+
+                await commands(conn, tran);
+
+                await tran.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await tran.RollbackAsync();
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
     }
 }

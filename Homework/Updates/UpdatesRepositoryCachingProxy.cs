@@ -1,4 +1,5 @@
-﻿using Homework.Events;
+﻿using Confluent.Kafka;
+using Homework.Events;
 using Homework.Events.RabbitMQ;
 using Homework.Friends;
 using Homework.Friends.Dto;
@@ -24,11 +25,11 @@ namespace Homework.Updates
         private readonly IFriendLinkRepository _friensRepo;
         private IMemoryCache _cache;
         private KafkaConsumer _kafkaConsumer;
-        private KafkaProducer _kafkaProducer;
+        private KafkaProducer<Null> _kafkaProducer;
         private Channel<object> _changesQueue = Channel.CreateUnbounded<object>();
 
         public UpdatesRepositoryCachingProxy(MySqlUpdatesRepository repository, IFriendLinkRepository friensRepo,
-            IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer)
+            IMemoryCache cache, KafkaConsumer kafkaConsumer, KafkaProducer<Null> kafkaProducer)
         {
             _repo = repository;
             _friensRepo = friensRepo;

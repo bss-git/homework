@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using SharedDto.UserCounters;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;

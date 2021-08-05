@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Auth;
+using Confluent.Kafka;
 using Homework.Auth;
 using Homework.Dialogs;
 using Homework.Dialogs.Application;
@@ -93,11 +94,12 @@ namespace Homework
             
             services.AddMemoryCache();
 
+            services.AddSingleton<KafkaProducer<Guid>>();
 
             services.AddOptions<RabbitOptions>().Bind(Configuration.GetSection("RabbitMQ"));
             services.AddSingleton<RabbitChannelFactory>();
             services.AddOptions<KafkaOptions>().Bind(Configuration.GetSection("Kafka"));
-            services.AddSingleton<KafkaProducer>();
+            services.AddSingleton<KafkaProducer<Null>>();
             services.AddSingleton<KafkaConsumer>();
             services.AddSingleton<MySqlUpdatesRepository>();
             services.AddSingleton<UpdatesRepositoryCachingProxy>();
