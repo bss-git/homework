@@ -3,6 +3,7 @@ using Dialogs.Persistence.Mysql;
 using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -46,12 +47,14 @@ namespace Dialogs.Persistense
         {
             try
             {
+                var processing = new ConcurrentDictionary<string, object>();
+
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     try
                     {
                         var outbox = await _mySqlDb.GetListAsync(connectionString, "Get_Outbox", FromReader);
-                        foreach (var message in outbox)
+                        foreach (var message in outbox.Where(x => !processing.ContainsKey(x.Id)))
                         {
                             _ = _kafkaProducer.ProduceAsync(message.Topic, message.Key, message.Value)
                                 .ContinueWith(async t =>
@@ -60,7 +63,11 @@ namespace Dialogs.Persistense
                                         await _mySqlDb.ExecuteTextAsync(connectionString, $"DELETE FROM Outbox WHERE Id='{message.Id}'");
                                     else
                                         Console.WriteLine(t.Exception);
+
+                                    processing.TryRemove(message.Id, out _);
                                 });
+
+                            processing.TryAdd(message.Id, null);
                         }
 
                         if (outbox.Count == 0)

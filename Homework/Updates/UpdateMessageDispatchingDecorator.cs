@@ -39,7 +39,9 @@ namespace Homework.Updates
 
             await _decorated.SaveAsync(update);
 
-            foreach (var friend in friends.Prepend(update.UserId))
+            _messageBus.Publish(new UpdateMessage { Recepient = update.UserId, Update = update });
+
+            foreach (var friend in friends)
             {
                 _messageBus.Publish(new UpdateMessage { Recepient = friend, Update = update });
                 _ = _kafkaProducer.ProduceAsync("user_update", Guid.NewGuid().ToString(), new UserCounterEvent { UserId = friend, EventType = EventType.NewMessage });
