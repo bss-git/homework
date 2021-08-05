@@ -20,9 +20,9 @@ namespace UserCounters.IncomingEvents.Handlers
         {
             var counterEvent = JsonConvert.DeserializeObject<UserCounterEvent>(consumeResult.Message.Value);
             if (counterEvent.EventType == EventType.NewMessage)
-                await redisTran.HashIncrementAsync(counterEvent.UserId.ToString(), "updates");
+                redisTran.HashIncrementAsync(counterEvent.UserId.ToString(), "updates");
             else
-                await redisTran.HashSetAsync(counterEvent.UserId.ToString(), "updates", 0);
+                redisTran.HashSetAsync(counterEvent.UserId.ToString(), "updates", 0);
         }
     }
 }

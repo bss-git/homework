@@ -29,7 +29,7 @@ namespace UserCounters.IncomingEvents.Handlers
 
             await HandleInner(consumeResult, tran);
 
-            await tran.SetAddAsync("updates:handled", consumeResult.Message.Key.ToString());
+            tran.SetAddAsync("updates:handled", consumeResult.Message.Key.ToString());
 
             await tran.ExecuteAsync();
         }
