@@ -1,4 +1,4 @@
-﻿window.onload = async () => {
+﻿$(document).ready(async function (e) {
     let userId = $('#user-id').data('userId')
 
     let response = await fetch(`http://${window.location.hostname}:5002/api/counters/${userId}`, {
@@ -7,7 +7,7 @@
 
     if (response.ok) {
         var respData = await response.json()
-        $('#unread-updates').text = respData.updates
-        $('#unread-dialogs').text = respData.dialogs
+        $('#unread-updates').text(respData.updates)
+        $('#unread-dialogs').text(respData.dialogs)
     }
-}
+})

@@ -85,7 +85,7 @@ async function startMessageUpdating(userId) {
 async function sendMessage(recipient, textInput, sendButton) {
     sendButton.disabled = true
     let text = textInput.value
-    let response = await fetch('http://${window.location.hostname}:5001/api/dialogs/message', {
+    let response = await fetch(`http://${window.location.hostname}:5001/api/dialogs/message`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
