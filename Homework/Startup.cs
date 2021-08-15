@@ -13,6 +13,7 @@ using Homework.Events.RabbitMQ;
 using Homework.Friends;
 using Homework.Persistence;
 using Homework.Persistence.Tarantool;
+using Homework.ServiceDiscovery;
 using Homework.Updates;
 using Homework.Updates.SignalR;
 using Homework.Users;
@@ -109,6 +110,9 @@ namespace Homework
 
             services.AddOptions<DialogsOptions>().Bind(Configuration.GetSection("Dialogs"));
             services.AddHttpClient<IDialogsRepository, ServiceDialogsRepository>();
+            
+            services.AddOptions<ConsulOptions>().Bind(Configuration.GetSection("Consul"));
+            services.AddSingleton<ConsulAddressResolver>();
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 

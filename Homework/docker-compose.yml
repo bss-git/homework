@@ -36,21 +36,43 @@ services:
   #  ports:
   #    - 82:80
 
-  dialogs:
-    container_name: dialogs
-    hostname: dialogs
+  dialogs_1:
+    container_name: dialogs_1
+    hostname: dialogs_1
     build:
       dockerfile: Dialogs/Dockerfile
       context: ..
+    image: homework_dialogs:version
     restart: "always"
     depends_on:
       - dialogs-db1
       - dialogs-db2
       - kafka
+      - consul
     ports:
       - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
+
+  dialogs_2:
+    container_name: dialogs_2
+    hostname: dialogs_2
+    image: homework_dialogs:version
+    restart: "always"
+    depends_on:
+      - dialogs-db1
+      - dialogs-db2
+      - kafka
+      - consul
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+  
+  consul:
+    container_name: consul
+    hostname: consul
+    image: consul
+    ports:
+      - 8500:8500
 
   usercounters:
     container_name: usercounters

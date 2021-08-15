@@ -18,19 +18,20 @@ namespace Homework.Dialogs
     [Obsolete("Нужен для обратной совместимости старых клиентов. Удалить после перехода клиентов на апи сервиса диалогов.")]
     public class ServiceDialogsRepository : IDialogsRepository
     {
-        private readonly string _baseUri;
-        private readonly HttpClient _httpClient;
 
-        public ServiceDialogsRepository(IOptions<DialogsOptions> options, HttpClient httpClient)
+        private readonly HttpClient _httpClient;
+        private readonly ConsulAddressResolver _resolver;
+
+        public ServiceDialogsRepository(HttpClient httpClient, ConsulAddressResolver resolver)
         {
-            _baseUri = $"http://{options.Value.Host}:{options.Value.Port}";
             _httpClient = httpClient;
+            _resolver = resolver;
         }
 
         public async Task<string> GetListAsync(Guid user1, Guid user2)
         {
             var path = $"/api/dialogs/{user2}";
-            var request = new HttpRequestMessage(HttpMethod.Get, _baseUri + path);
+            var request = new HttpRequestMessage(HttpMethod.Get, await _resolver.GetAddress() + path);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", JwtProvider.GetToken("", user1));
             
             request.InjectTracing();
@@ -40,10 +41,10 @@ namespace Homework.Dialogs
             return await response.Content.ReadAsStringAsync();
         }
 
-        public Task SaveAsync(Message message)
+        public async Task SaveAsync(Message message)
         {
             var path = "/api/dialogs/message";
-            var request = new HttpRequestMessage(HttpMethod.Post, _baseUri + path);
+            var request = new HttpRequestMessage(HttpMethod.Post, await _resolver.GetAddress() + path);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", JwtProvider.GetToken("", message.From));
 
             var body = JsonConvert.SerializeObject(new { To = message.To, Text = message.Text });
@@ -51,7 +52,7 @@ namespace Homework.Dialogs
 
             request.InjectTracing();
 
-            return _httpClient.SendAsync(request);
+            await _httpClient.SendAsync(request);
         }
     }
 }

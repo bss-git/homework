@@ -1,9 +1,11 @@
 using Auth;
+using Consul;
 using Dialogs.Application;
 using Dialogs.Persistence;
 using Dialogs.Persistence.Kafka;
 using Dialogs.Persistence.Mysql;
 using Dialogs.Persistense;
+using Dialogs.ServiceDiscovery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -60,6 +63,9 @@ namespace Dialogs
 
             services.AddJaegerTracing(Configuration.GetSection("Jaeger").Get<JaegerConfig>());
 
+            services.AddOptions<ConsulOptions>().Bind(Configuration.GetSection("Consul"));
+
+            services.AddHealthChecks();
             services.AddHostedService<OutboxEventSender>();
         }
 
@@ -86,6 +92,33 @@ namespace Dialogs
             {
                 endpoints.MapControllers();
             });
+
+            app.UseHealthChecks("/health");
+
+            UseConsul(app);
+        }
+
+        private static void UseConsul(IApplicationBuilder app)
+        {
+            var options = app.ApplicationServices.GetService<IOptions<ConsulOptions>>();
+            var client = new ConsulClient(new ConsulClientConfiguration() { Address = new Uri(options.Value.Address) });
+            var hostname = Environment.MachineName;
+            var consulServiceID = $"dialogs:{hostname}";
+            client.Agent.ServiceRegister(new AgentServiceRegistration
+            {
+                Name = "dialogs",
+                ID = consulServiceID,
+                Address = hostname,
+                Port = 5001,
+                Check = new AgentServiceCheck()
+                {
+                    Name = "http health",
+                    Method = "GET",
+                    Interval = TimeSpan.FromSeconds(5),
+                    Timeout = TimeSpan.FromSeconds(5),
+                    HTTP = $"http://{hostname}:5001/health"
+                }
+            }).Wait();
         }
     }
 }
