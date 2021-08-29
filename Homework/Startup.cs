@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Homework.Auth;
+using Homework.Dialogs;
 using Homework.Dialogs.Application;
-using Homework.Dialogs.Persistense;
 using Homework.Events;
 using Homework.Events.RabbitMQ;
 using Homework.Friends;
@@ -23,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Tracing;
 
 namespace Homework
 {
@@ -81,12 +82,12 @@ namespace Homework
             services.AddSingleton<UpdatesMessageBus>();
             services.AddSingleton<UpdatesHubEventPublisher>();
 
-            services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
-            services.AddSingleton<DialogsShardSelector>();
-            services.AddSingleton<IDialogsRepository, MySqlDialogsRepository>();
+            services.AddOptions<DialogsOptions>().Bind(Configuration.GetSection("Dialogs"));
+            services.AddHttpClient<IDialogsRepository, ServiceDialogsRepository>();
 
             services.AddScoped<ExceptionHandlingMiddleware>();
 
+            services.AddJaegerTracing(Configuration.GetSection("Jaeger").Get<JaegerConfig>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +110,8 @@ namespace Homework
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestTracingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,4 +1,5 @@
-﻿using Homework.Auth;
+﻿using Auth;
+using Homework.Auth;
 using Homework.Updates.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;

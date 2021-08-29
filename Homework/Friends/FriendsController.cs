@@ -1,4 +1,5 @@
-﻿using Homework.Auth;
+﻿using Auth;
+using Homework.Auth;
 using Homework.Friends.Dto;
 using Homework.Users;
 using Microsoft.AspNetCore.Authorization;

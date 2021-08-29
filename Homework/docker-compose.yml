@@ -17,6 +17,19 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
 
+  dialogs:
+    build:
+      dockerfile: Dialogs/Dockerfile
+      context: ..
+    restart: "always"
+    depends_on:
+      - dialogs-db1
+      - dialogs-db2
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+
   mysql:
     container_name: mysql
     hostname: mysql
@@ -163,6 +176,16 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+
+  jaeger:
+    container_name: jaeger
+    hostname: jaeger
+    restart: "always"
+    image: jaegertracing/all-in-one
+    ports:
+      - 6831:6831
+      - 16686:16686
+    command: --memory.max-traces=1000
 
   #dialogs-db3:
   #  container_name: dialogs-db3

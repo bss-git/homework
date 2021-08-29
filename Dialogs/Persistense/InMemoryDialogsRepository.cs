@@ -1,11 +1,11 @@
-﻿using Homework.Dialogs.Application;
-using Homework.Dialogs.Application.Dto;
+﻿using Dialogs.Application;
+using Dialogs.Application.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Homework.Dialogs.Persistense
+namespace Dialogs.Persistence
 {
     public class InMemoryDialogsRepository : IDialogsRepository
     {

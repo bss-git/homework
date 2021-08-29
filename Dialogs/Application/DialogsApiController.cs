@@ -1,6 +1,5 @@
 ﻿using Auth;
-using Homework.Auth;
-using Homework.Dialogs.Application.Dto;
+using Dialogs.Application.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Homework.Dialogs.Application
+namespace Dialogs.Application
 {
     [Route("api/dialogs")]
     [ApiController]
     [Authorize]
-    [Obsolete("Нужен для обратной совместимости старых клиентов. Удалить после перехода клиентов на апи сервиса диалогов.")]
     public class DialogsApiController : ControllerBase
     {
         private readonly IDialogsRepository _dialogsRepository;
@@ -37,9 +35,10 @@ namespace Homework.Dialogs.Application
         public async Task<IActionResult> GetMessages(Guid interlocutorId)
         {
             var userId = User.Id();
-            var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId));
+            var messages = (await _dialogsRepository.GetListAsync(userId, interlocutorId))
+                .Select(x => new MessageClientDto(x, x.From == userId));
 
-            return Ok(messages);
+            return new JsonResult(messages);
         }
     }
 }

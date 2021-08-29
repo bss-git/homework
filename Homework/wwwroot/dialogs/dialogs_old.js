@@ -1,6 +1,4 @@
-﻿var token
-
-window.onload = () => {
+﻿window.onload = () => {
     let sendButton = document.getElementById('send_button')
     let textInput = document.getElementById('send_text')
 
@@ -38,12 +36,12 @@ window.onload = () => {
     }
 }
 
-var messagesUpdateInterval
+var messagesUpdateInterval;
 
 async function startMessageUpdating(userId) {
     clearInterval(messagesUpdateInterval)
 
-    if (await loadMessages( userId)) {
+    if (await loadMessages(userId)) {
     }
     else {
         alert('Не удалось загрузить данные')
@@ -52,20 +50,8 @@ async function startMessageUpdating(userId) {
     messagesUpdateInterval = setInterval(() => { loadMessages(userId) }, 3000)
 
     async function loadMessages(userId) {
-        if (!token) {
-            let response = await fetch(`/auth/jwt`, {
-                method: 'GET'
-            })
-
-            token = `Bearer ${await response.text()}`
-        }
-
-
-        let response = await fetch(`http://${window.location.hostname}:5001/api/dialogs/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': token
-            }
+        let response = await fetch(`/api/dialogs/${userId}`, {
+            method: 'GET'
         });
 
         if (response.ok) {
@@ -85,11 +71,10 @@ async function startMessageUpdating(userId) {
 async function sendMessage(recipient, textInput, sendButton) {
     sendButton.disabled = true
     let text = textInput.value
-    let response = await fetch('http://${window.location.hostname}:5001/api/dialogs/message', {
+    let response = await fetch('/api/dialogs/message', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': token
+            'Content-Type': 'application/json;charset=utf-8'
         },
         body: JSON.stringify({ to: recipient, text: text })
     });
