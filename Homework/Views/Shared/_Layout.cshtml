@@ -21,19 +21,26 @@
                 </button>
                 @if (_userManager.IsLoggedIn)
                 {
+                    <div id="user-id" data-user-id="@_userManager.CurrentUserId"></div>
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="~/users/@_userManager.CurrentUserLogin">Моя страница</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Updates" asp-action="UpdatesList">Обновления</a>
+                                <div style="display: flex; ">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Updates" asp-action="UpdatesList">Обновления</a>
+                                    <span class="unread-count" id="unread-updates" style="font-weight:bold; color: green"></span>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Friends" asp-action="FriendsList">Друзья</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Dialogs" asp-action="Index">Чат</a>
+                                <div style="display: flex; ">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Dialogs" asp-action="Index">Чат</a>
+                                    <span class="unread-count" id="unread-dialogs" style="font-weight:bold; color: green"></span>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Dialogs" asp-action="Old">Чат (cтарый клиент)</a>
@@ -74,6 +81,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/unreadCount.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

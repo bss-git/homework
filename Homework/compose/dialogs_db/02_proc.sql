@@ -105,3 +105,18 @@ BEGIN
 END;$$
 
 DELIMITER ;
+
+USE `dialogs`;
+DROP procedure IF EXISTS `Get_Outbox`;
+
+DELIMITER $$
+USE `dialogs`$$
+CREATE PROCEDURE `Get_Outbox`
+(
+)
+BEGIN
+	SELECT *
+	FROM Outbox;
+END;$$
+
+DELIMITER ;

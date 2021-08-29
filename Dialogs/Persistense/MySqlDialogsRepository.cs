@@ -8,6 +8,8 @@ using Dialogs.Application;
 using Dialogs.Application.Dto;
 using Microsoft.Extensions.Logging;
 using Dialogs.Persistence.Mysql;
+using SharedDto.UserCounters;
+using Newtonsoft.Json;
 
 namespace Dialogs.Persistence
 {
@@ -37,14 +39,23 @@ namespace Dialogs.Persistence
 
         public Task SaveAsync(Message message)
         {
-            return _mySql.ExecuteNonQueryAsync(_shardSelector.GetConnectionString(message.From, message.To),
-                "INSERT_Messages", new[] {
-                new MySqlParameter("@id", message.Id.ToByteArray()),
-                new MySqlParameter("@from", message.From.ToByteArray()),
-                new MySqlParameter("@to", message.To.ToByteArray()),
-                new MySqlParameter("@text", message.Text),
-                new MySqlParameter("@timestamp", message.Timestamp),
-                new MySqlParameter("@hashCode", _shardSelector.GetHashCode(message.From, message.To))
+            var eventId = Guid.NewGuid().ToString();
+            var eventValue = JsonConvert.SerializeObject(new UserCounterEvent { UserId = message.To, EventType = EventType.NewMessage });
+
+            return _mySql.ExecuteTranAsync(_shardSelector.GetConnectionString(message.From, message.To), async (conn, tran) =>
+            {
+                await _mySql.ExecuteNonQueryAsync(conn, tran,
+                    "INSERT_Messages", new[] {
+                    new MySqlParameter("@id", message.Id.ToByteArray()),
+                    new MySqlParameter("@from", message.From.ToByteArray()),
+                    new MySqlParameter("@to", message.To.ToByteArray()),
+                    new MySqlParameter("@text", message.Text),
+                    new MySqlParameter("@timestamp", message.Timestamp),
+                    new MySqlParameter("@hashCode", _shardSelector.GetHashCode(message.From, message.To))
+                });
+
+                await _mySql.ExecuteTextAsync(conn, tran,
+                    $"INSERT INTO Outbox VALUES ('{eventId}', 'user_dialog', '{eventId}', '{eventValue}')");
             });
         }
 

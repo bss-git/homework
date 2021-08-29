@@ -68,12 +68,13 @@ namespace Homework.Persistence
             }
         }
 
-        public async Task ExecuteText(string text)
+        public async Task ExecuteTextAsync(string text)
         {
             try
             {
                 using var conn = new MySqlConnection(_masterConnectionString);
                 var cmd = conn.CreateCommand();
+
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.CommandText = text;
 

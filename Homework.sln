@@ -5,11 +5,15 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Homework", "Homework\Homework.csproj", "{BF92A8FA-A7CB-450B-B458-6F0F0F81B4D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dialogs", "Dialogs\Dialogs.csproj", "{CB844340-B56C-4911-8900-3F7D8C41BA77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dialogs", "Dialogs\Dialogs.csproj", "{CB844340-B56C-4911-8900-3F7D8C41BA77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{D34EB434-35C9-4142-AE4C-4A42B6E689D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth", "Auth\Auth.csproj", "{D34EB434-35C9-4142-AE4C-4A42B6E689D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing", "Tracing\Tracing.csproj", "{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing", "Tracing\Tracing.csproj", "{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserCounters", "UserCounters\UserCounters.csproj", "{AFC3F554-13AD-459E-848D-8F0A68B82814}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedDto", "SharedDto\SharedDto.csproj", "{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{840B5C68-6B2A-46ED-949E-666CFBBEAC3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFC3F554-13AD-459E-848D-8F0A68B82814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C2B7D60-2603-4BA6-88A4-B0C42C426C4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
