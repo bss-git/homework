@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,11 +68,20 @@ namespace Dialogs
 
             services.AddHealthChecks();
             services.AddHostedService<OutboxEventSender>();
+
+            services.AddScoped<ExceptionHandlingMiddleware>();
+            services.AddScoped<RequestDurationMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHealthChecks("/health");
+            app.UseMetricServer();
+
+            app.UseMiddleware<RequestDurationMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -82,6 +92,7 @@ namespace Dialogs
             app.UseCors(builder => builder.WithOrigins("http://kany.ga", "http://localhost:5000")
                             .AllowAnyHeader()
                             .AllowAnyMethod());
+            
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -91,9 +102,9 @@ namespace Dialogs
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapMetrics();
             });
 
-            app.UseHealthChecks("/health");
 
             UseConsul(app);
         }

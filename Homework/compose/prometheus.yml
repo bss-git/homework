@@ -1,0 +1,14 @@
+﻿global:
+  scrape_interval: 5s
+  scrape_timeout: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+- job_name: dialogs
+  honor_timestamps: true
+  scrape_interval: 5s
+  scrape_timeout: 5s
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets: ['dialogs_1:5001', 'dialogs_2:5001']
