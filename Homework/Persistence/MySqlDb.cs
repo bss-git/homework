@@ -68,12 +68,13 @@ namespace Homework.Persistence
             }
         }
 
-        public async Task ExecuteText(string text)
+        public async Task ExecuteTextAsync(string text)
         {
             try
             {
                 using var conn = new MySqlConnection(_masterConnectionString);
                 var cmd = conn.CreateCommand();
+
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.CommandText = text;
 
@@ -100,7 +101,7 @@ namespace Homework.Persistence
 
         public Task<List<T>> GetListAsync<T>(string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
         {
-            return GetListAsync<T>(_masterConnectionString, procedureName, fromReader, parameters);
+            return GetListAsync<T>(_replicasConnectionString, procedureName, fromReader, parameters);
         }
 
         public async Task<List<T>> GetListAsync<T>(string connectionString, string procedureName, Func<MySqlDataReader, T> fromReader, params MySqlParameter[] parameters)
@@ -142,7 +143,7 @@ namespace Homework.Persistence
         {
             try
             {
-                await using var conn = new MySqlConnection(_masterConnectionString);
+                await using var conn = new MySqlConnection(_replicasConnectionString);
                 var cmd = conn.CreateCommand();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = procedureName;

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Auth;
+using Confluent.Kafka;
 using Homework.Auth;
 using Homework.Dialogs;
 using Homework.Dialogs.Application;
@@ -14,6 +17,7 @@ using Homework.Updates;
 using Homework.Updates.SignalR;
 using Homework.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Tracing;
 
 namespace Homework
@@ -39,13 +44,32 @@ namespace Homework
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.LoginPath = new PathString("/auth/login");
-                });
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = JwtAuthOptions.Key,
+                    ValidateIssuerSigningKey = true,
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["beareridentity"];
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
-            services.AddSignalR();
+            var redis = Configuration.GetSection("Redis").Get<RedisConfig>();
+            services.AddSignalR().AddStackExchangeRedis($"{redis.Host}:{redis.Port}", options =>
+            {
+                options.Configuration.ChannelPrefix = "updatesHub";
+            });
 
             services.AddControllersWithViews();
 
@@ -70,11 +94,12 @@ namespace Homework
             
             services.AddMemoryCache();
 
+            services.AddSingleton<KafkaProducer<string>>();
 
             services.AddOptions<RabbitOptions>().Bind(Configuration.GetSection("RabbitMQ"));
             services.AddSingleton<RabbitChannelFactory>();
             services.AddOptions<KafkaOptions>().Bind(Configuration.GetSection("Kafka"));
-            services.AddSingleton<KafkaProducer>();
+            services.AddSingleton<KafkaProducer<Null>>();
             services.AddSingleton<KafkaConsumer>();
             services.AddSingleton<MySqlUpdatesRepository>();
             services.AddSingleton<UpdatesRepositoryCachingProxy>();
@@ -93,8 +118,6 @@ namespace Homework
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.ApplicationServices.GetRequiredService<IDialogsRepository>();
-
             //if (env.IsDevelopment())
             //{
             //    app.UseDeveloperExceptionPage();
@@ -106,12 +129,23 @@ namespace Homework
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseStaticFiles();
 
+            app.UseStatusCodePages(async context => {
+                var request = context.HttpContext.Request;
+                var response = context.HttpContext.Response;
+
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    response.Redirect("/auth/login");
+                };
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMiddleware<RequestTracingMiddleware>();
+
 
             app.UseEndpoints(endpoints =>
             {

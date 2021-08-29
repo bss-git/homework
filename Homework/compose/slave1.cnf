@@ -4,4 +4,3 @@ replicate-do-db=soc
 gtid_mode=ON
 enforce-gtid-consistency
 relay-log=mysql-slave1-relay-bin
-rpl_semi_sync_slave_enabled=1

@@ -1,4 +1,6 @@
-﻿CREATE TABLE `UserPassword` (
+﻿use `soc`;
+
+CREATE TABLE `UserPassword` (
   `Login` varchar(200) NOT NULL,
   `PasswordHash` binary(32) NOT NULL,
   `Salt` char(36) NOT NULL,
@@ -25,3 +27,9 @@ CREATE TABLE `FriendOffer` (
 CREATE TABLE `soc`.`FriendLink` (
 `UserId` BINARY(16) NOT NULL,
 `FriendId` BINARY(16) NOT NULL);
+
+CREATE TABLE `soc`.`Updates` (
+`UserId` BINARY(16),
+`UserName` VARCHAR(100),
+`Timestamp` DATETIME,
+`Message` VARCHAR(200));

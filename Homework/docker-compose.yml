@@ -2,6 +2,8 @@ version: '3.1'
 
 services:
   web:
+    container_name: web
+    hostname: web
     build:
       dockerfile: Homework/Dockerfile
       context: ..
@@ -10,14 +12,33 @@ services:
       - mysql
       - tarantool
       - kafka
-      - dialogs-db1
-      - dialogs-db2
-    ports:
-      - "80:80"
+      - rabbitmq
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
+    ports:
+      - 80:80
+
+  #web2:
+  #  container_name: web2
+  #  hostname: web2
+  #  build:
+  #    dockerfile: Homework/Dockerfile
+  #    context: ..
+  #  restart: "always"
+  #  depends_on:
+  #    - mysql
+  #    - tarantool
+  #    - kafka
+  #    - dialogs-db1
+  #    - dialogs-db2
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Compose
+  #  ports:
+  #    - 82:80
 
   dialogs:
+    container_name: dialogs
+    hostname: dialogs
     build:
       dockerfile: Dialogs/Dockerfile
       context: ..
@@ -25,8 +46,24 @@ services:
     depends_on:
       - dialogs-db1
       - dialogs-db2
+      - kafka
     ports:
       - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+
+  usercounters:
+    container_name: usercounters
+    hostname: usercounters
+    build:
+      dockerfile: UserCounters/Dockerfile
+      context: ..
+    restart: "always"
+    depends_on:
+      - redis
+      - kafka
+    ports:
+      - "5002:5002"
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
 
@@ -43,28 +80,28 @@ services:
     volumes:
       - homework_data:/var/lib/mysql
       - ./compose/master.cnf:/etc/mysql/conf.d/mysql.cnf
-      - ./compose/master.sql:/docker-entrypoint-initdb.d/start.sql
+      - ./compose/homework_db:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
 
-  #mysql-slave1:
-  #  depends_on:
-  #    - mysql
-  #  container_name: mysql-slave1
-  #  hostname: mysql-slave1
-  #  image: mysql
-  #  command: --default-authentication-plugin=mysql_native_password
-  #  cap_add:
-  #    - SYS_NICE
-  #  restart: "no"
-  #  environment:
-  #    MYSQL_ROOT_PASSWORD: example
-  #  volumes:
-  #    - homework_data_slave1:/var/lib/mysql
-  #    - ./compose/slave1.cnf:/etc/mysql/conf.d/mysql.cnf
-  #    - ./compose/slave.sql:/docker-entrypoint-initdb.d/start.sql
-  #  ports:
-  #    - "3307:3306"
+  mysql-slave1:
+    depends_on:
+      - mysql
+    container_name: mysql-slave1
+    hostname: mysql-slave1
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
+    restart: "always"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - homework_data_slave1:/var/lib/mysql
+      - ./compose/slave1.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ./compose/slave.sql:/docker-entrypoint-initdb.d/start.sql
+    ports:
+      - "3307:3306"
 
   mysql-slave2:
     depends_on:
@@ -119,10 +156,14 @@ services:
     environment:
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     volumes:
     - kafka:/bitnami/kafka
     ports:
-      - "9092:9092"
+      - "19092:19092"
 
   zookeeper:
     container_name: zookeeper
@@ -177,15 +218,46 @@ services:
       - 5672:5672
       - 15672:15672
 
-  jaeger:
-    container_name: jaeger
-    hostname: jaeger
+  haproxy:
+    container_name: haproxy
+    hostname: haproxy
     restart: "always"
-    image: jaegertracing/all-in-one
+    image: haproxy
     ports:
-      - 6831:6831
-      - 16686:16686
-    command: --memory.max-traces=1000
+      - 8404:8404
+    volumes:
+      - ./compose/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+
+  #nginx:
+  #  container_name: nginx
+  #  hostname: nginx
+  #  restart: "always"
+  #  image: nginx
+  #  ports:
+  #    - 80:80
+  #  volumes:
+  #    - ./compose/nginx.conf:/etc/nginx/nginx.conf
+
+  redis:
+    container_name: redis
+    hostname: redis
+    restart: "always"
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+  #jaeger:
+  #  container_name: jaeger
+  #  hostname: jaeger
+  #  restart: "always"
+  #  image: jaegertracing/all-in-one
+  #  ports:
+  #    - 6831:6831
+  #    - 16686:16686
+  #  command: --memory.max-traces=1000
 
   #dialogs-db3:
   #  container_name: dialogs-db3
@@ -214,3 +286,4 @@ volumes:
   dialogs-db1_data:
   dialogs-db2_data:
   dialogs-db3_data:
+  redis_data:

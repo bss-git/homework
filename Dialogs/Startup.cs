@@ -1,7 +1,9 @@
 using Auth;
 using Dialogs.Application;
 using Dialogs.Persistence;
+using Dialogs.Persistence.Kafka;
 using Dialogs.Persistence.Mysql;
+using Dialogs.Persistense;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,11 +51,16 @@ namespace Dialogs
 
             services.AddSingleton<MySqlDb>();
 
+            services.AddOptions<KafkaOptions>().Bind(Configuration.GetSection("Kafka"));
+            services.AddSingleton<KafkaProducer<string>>();
+
             services.AddOptions<DialogsMySqlOptions>().Bind(Configuration.GetSection("DialogsMySql"));
             services.AddSingleton<DialogsShardSelector>();
             services.AddSingleton<IDialogsRepository, MySqlDialogsRepository>();
 
             services.AddJaegerTracing(Configuration.GetSection("Jaeger").Get<JaegerConfig>());
+
+            services.AddHostedService<OutboxEventSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
