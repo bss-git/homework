@@ -363,7 +363,7 @@ services:
     image: zabbix/zabbix-agent
     restart: "always"
     environment:
-      ZBX_HOSTNAME: zabbix
+      ZBX_HOSTNAME: zabbix-agent
       ZBX_SERVER_HOST: zabbix
     volumes:
       - zabbix_data:/var/lib/mysql
