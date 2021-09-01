@@ -32,6 +32,9 @@ namespace Dialogs.Application
             var message = new Message(User.Id(), command.To, command.Text, DateTime.UtcNow);
             await _dialogsRepository.SaveAsync(message);
 
+
+            Metrics.MessagesTotal.Inc();
+
             return Ok();
         }
 
